@@ -24,10 +24,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Set Expo Token environment variable
+      # Step 4: Install EAS CLI
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      # Step 5: Set Expo Token environment variable
       - name: Set EXPO_TOKEN
         run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
-      # Step 5: EAS Build for Android (Development)
+      # Step 6: EAS Build for Android (Development)
       - name: EAS Build (Android - Development)
         run: eas build --platform android --profile development --non-interactive
