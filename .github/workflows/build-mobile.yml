@@ -3,7 +3,7 @@ name: EAS Build (Android - Development)
 on:
   push:
     branches:
-      - develop
+      - develop-expo
 
 jobs:
   build:
