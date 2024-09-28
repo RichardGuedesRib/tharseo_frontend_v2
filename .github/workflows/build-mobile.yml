@@ -15,7 +15,6 @@ jobs:
         uses: actions/checkout@v2
 
       # Step 2: Set up Node.js
-      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 16
@@ -37,13 +36,17 @@ jobs:
         run: |
           eas build --platform android --profile development --non-interactive | tee build_output.txt
 
-      # Step 7: Get APK URL from build output (adjusted to find the full link)
+      # Step 7: Get APK URL from build output (adjusted to find the correct link)
       - name: Get APK URL
         id: apk_url
         run: |
           BUILD_PAGE_URL=$(grep -o "https://expo.dev/accounts/.*/projects/.*/builds/.*" build_output.txt)
           echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}"
-          APK_URL=$(curl -s $BUILD_PAGE_URL | grep -oP 'https://expo-artifacts\.s3\.amazonaws\.com/.*\.apk')
+          
+          # Aguarda um momento para garantir que o link correto foi gerado
+          sleep 10
+          
+          APK_URL=$(curl -s $BUILD_PAGE_URL | grep -oP 'https://expo\.dev/artifacts/.*\.apk')
           echo "APK_URL=${APK_URL}"
           echo "APK_URL=${APK_URL}" >> $GITHUB_ENV
 
