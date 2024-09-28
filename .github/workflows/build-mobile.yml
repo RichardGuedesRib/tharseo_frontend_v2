@@ -43,13 +43,13 @@ jobs:
         run: |
           BUILD_PAGE_URL=$(grep -o "https://expo.dev/accounts/.*/projects/.*/builds/.*" build_output.txt)
           echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}" >> $GITHUB_ENV
-          echo "::set-output name=build_page_url::${BUILD_PAGE_URL}"
+          echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}"
 
       # Step 8: Send message to Telegram with the captured link
       - name: Send message to Telegram
         if: success()
         run: |
-          MESSAGE="Novidades! Temos uma nova versão de desenvolvimento!\nLink: ${{ steps.capture_link.outputs.build_page_url }}\nPara mais informações ou download acesse o link ou copie o link no seu expo para acesso ao preview."
+          MESSAGE="Novidades! Temos uma nova versão de desenvolvimento!\nLink: $BUILD_PAGE_URL\nPara mais informações ou download acesse o link ou copie o link no seu expo para acesso ao preview."
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
           -d text="${MESSAGE}" \
