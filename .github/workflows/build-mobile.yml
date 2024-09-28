@@ -37,25 +37,20 @@ jobs:
         run: |
           eas build --platform android --profile development --non-interactive | tee build_output.txt
 
-      # Step 7: Get APK URL from build output (adjusted to find the correct link)
-      - name: Get APK URL
-        id: apk_url
+      # Step 7: Capture the build link
+      - name: Capture Build Link
+        id: capture_link
         run: |
           BUILD_PAGE_URL=$(grep -o "https://expo.dev/accounts/.*/projects/.*/builds/.*" build_output.txt)
-          echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}"
-          
-          # Aguarda um momento para garantir que o link correto foi gerado
-          sleep 10
-          
-          APK_URL=$(curl -s $BUILD_PAGE_URL | grep -oP 'https://expo\.dev/artifacts/.*\.apk')
-          echo "APK_URL=${APK_URL}"
-          echo "APK_URL=${APK_URL}" >> $GITHUB_ENV
+          echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}" >> $GITHUB_ENV
+          echo "::set-output name=build_page_url::${BUILD_PAGE_URL}"
 
-      # Step 8: Send APK link to Telegram
-      - name: Send APK link to Telegram
+      # Step 8: Send message to Telegram with the captured link
+      - name: Send message to Telegram
         if: success()
         run: |
-          MESSAGE="Download APK: ${APK_URL}"
+          MESSAGE="Novidades! Temos uma nova versão de desenvolvimento!\nLink: ${{ steps.capture_link.outputs.build_page_url }}\nPara mais informações ou download acesse o link ou copie o link no seu expo para acesso ao preview."
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-          -d text="${MESSAGE}"
+          -d text="${MESSAGE}" \
+          -d parse_mode="Markdown"
