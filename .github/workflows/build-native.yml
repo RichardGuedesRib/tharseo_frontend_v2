@@ -14,14 +14,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Step 2: Notify that the deploy has started
-      - name: Notify that deploy has started
-        run: |
-          MESSAGE="🚀 Um deploy MOBILE na branch *develop-native* foi iniciado! A previsão para conclusão é de 12 minutos."
-          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-          -d text="${MESSAGE}" \
-          -d parse_mode="Markdown"
+      # # Step 2: Notify that the deploy has started
+      # - name: Notify that deploy has started
+      #   run: |
+      #     MESSAGE="🚀 Um deploy MOBILE na branch *develop-native* foi iniciado! A previsão para conclusão é de 12 minutos."
+      #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+      #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+      #     -d text="${MESSAGE}" \
+      #     -d parse_mode="Markdown"
 
       # Step 3: Set up Node.js
       - name: Set up Node.js
@@ -79,11 +79,11 @@ jobs:
           -d parse_mode="Markdown"
 
       # Step 10: Notify on failure
-      - name: Notify on failure
-        if: failure()
-        run: |
-          MESSAGE="🚨 Ocorreu um erro durante o processo de build do aplicativo!\nPor favor, verifique os logs para mais informações."
-          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-          -d text="${MESSAGE}" \
-          -d parse_mode="Markdown"
+      # - name: Notify on failure
+      #   if: failure()
+      #   run: |
+      #     MESSAGE="🚨 Ocorreu um erro durante o processo de build do aplicativo!\nPor favor, verifique os logs para mais informações."
+      #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+      #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+      #     -d text="${MESSAGE}" \
+      #     -d parse_mode="Markdown"
