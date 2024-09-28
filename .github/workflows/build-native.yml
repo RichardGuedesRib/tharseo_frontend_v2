@@ -3,7 +3,7 @@ name: Build React Native Android
 on:
   push:
     branches:
-      - develop-native  # Alterado para a nova branch
+      - develop-native  # Branch para builds Android
 
 jobs:
   build:
@@ -28,20 +28,24 @@ jobs:
       - name: Install React Native CLI
         run: npm install -g react-native-cli
 
-      # Step 5: Build the Android app
+      # Step 5: Grant execute permission for Gradle wrapper
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x android/gradlew
+
+      # Step 6: Build the Android app
       - name: Build Android App
         run: |
           cd android
           ./gradlew assembleDebug
 
-      # Step 6: Upload the APK as an artifact
+      # Step 7: Upload the APK as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v3  # Atualizado para v3
         with:
           name: app-debug.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
-      # Step 7: Notify on successful build
+      # Step 8: Notify on successful build
       - name: Notify on success
         run: |
           MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK."
@@ -50,7 +54,7 @@ jobs:
           -d text="${MESSAGE}" \
           -d parse_mode="Markdown"
 
-      # Step 8: Notify on failure
+      # Step 9: Notify on failure
       # - name: Notify on failure
       #   if: failure()
       #   run: |
@@ -58,4 +62,4 @@ jobs:
       #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
       #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
       #     -d text="${MESSAGE}" \
-      #     -d parse_mode="Markdown"###
+      #     -d parse_mode="Markdown"
