@@ -20,29 +20,36 @@ jobs:
         with:
           node-version: '18'  # Atualizado para Node.js 18 para compatibilidade com React Native
 
-      # Step 3: Install dependencies
+      # Step 3: Install Java 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'  # Pode ser 'temurin' ou 'zulu'
+
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Install React Native CLI
+      # Step 5: Install React Native CLI
       - name: Install React Native CLI
         run: npm install -g react-native-cli
 
-      # Step 5: Build the Android app
+      # Step 6: Build the Android app
       - name: Build Android App
         run: |
           cd android
           chmod +x ./gradlew  # Garantir permissões de execução
           ./gradlew assembleDebug
 
-      # Step 6: Upload the APK as an artifact
+      # Step 7: Upload the APK as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v3  # Usando a versão mais recente (v3)
         with:
           name: app-debug.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
-      # Step 7: Notify on successful build with link to artifact
+      # Step 8: Notify on successful build with link to artifact
       - name: Notify on success with link to APK
         run: |
           ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -52,7 +59,7 @@ jobs:
           -d text="${MESSAGE}" \
           -d parse_mode="Markdown"
 
-      # Step 8: Notify on failure
+      # # Step 9: Notify on failure
       # - name: Notify on failure
       #   if: failure()
       #   run: |
