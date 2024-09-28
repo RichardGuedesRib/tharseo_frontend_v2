@@ -10,28 +10,37 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 16
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Install EAS CLI
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+      - name: Log in to Expo
+        run: npx expo login --token ${{ secrets.EXPO_TOKEN }}
 
-      # Step 5: Set Expo Token environment variable
-      - name: Set EXPO_TOKEN
-        run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
-
-      # Step 6: EAS Build for Android (Development)
       - name: EAS Build (Android - Development)
-        run: eas build --platform android --profile development --non-interactive
+        run: |
+          eas build --platform android --profile development --non-interactive | tee build_output.txt
+
+      - name: Get APK URL
+        id: apk_url
+        run: |
+          APK_URL=$(grep -o "https://expo.dev/artifacts/.*apk" build_output.txt)
+          echo "APK_URL=${APK_URL}"
+          echo "APK_URL=${APK_URL}" >> $GITHUB_ENV
+
+      - name: Download APK
+        run: |
+          curl -o app.apk $APK_URL
+          
+      - name: Send APK to Telegram
+        run: |
+          curl -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+               -F document=@app.apk \
+               https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
