@@ -53,26 +53,32 @@ jobs:
           chmod +x ./gradlew  # Garantir permissões de execução
           ./gradlew clean assembleDebug --info  # Executa a limpeza e constrói com mais informações
 
-      # Step 8: Upload the APK as an artifact
-      - name: Upload APK
-        id: upload-apk  # Adiciona um ID para esta etapa
-        uses: actions/upload-artifact@v3 
+      # Step 8: Create a new release and upload the APK
+      - name: Create Release and Upload APK
+        uses: softprops/action-gh-release@v1
         with:
-          name: app-debug.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          tag_name: v1.${{ github.run_number }}  # Use a versão desejada
+          release_name: Release v1.${{ github.run_number }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token do GitHub
+        # Upload the APK file
+        with:
+          files: android/app/build/outputs/apk/debug/app-debug.apk
 
-      # Step 9: Notify on successful build with link to artifact
+      # Step 9: Notify on successful build with link to APK
       - name: Notify on success with link to APK
         run: |
-          ARTIFACT_ID="${{ steps.upload-apk.outputs.artifact_id }}"  # Captura o ID do artefato
-          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${ARTIFACT_ID}"  # URL completa do artefato
-          MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK [aqui](${ARTIFACT_URL})."
+          TAG="v1.${{ github.run_number }}"  # Use a versão desejada
+          APK_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/app-debug.apk"  # URL completa do APK
+          MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK [aqui](${APK_URL})."
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
           -d text="${MESSAGE}" \
           -d parse_mode="Markdown"
 
-       # Step 10: Notify on failure
+      # Step 10: Notify on failure
       - name: Notify on failure
         if: failure()
         run: |
