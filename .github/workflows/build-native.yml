@@ -3,7 +3,7 @@ name: Build React Native Android
 on:
   push:
     branches:
-      - develop-native  # Branch usada para o build de Android
+      - develop-native  
 
 jobs:
   build:
@@ -18,14 +18,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'  # Atualizado para Node.js 18 para compatibilidade com React Native
-
+          node-version: '18'
+          
       # Step 3: Install Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'temurin'  # Pode ser 'temurin' ou 'zulu'
+          distribution: 'temurin' 
 
       # Step 4: Install dependencies
       - name: Install dependencies
@@ -38,7 +38,7 @@ jobs:
       # Step 6: Clean Gradle Cache and Build the Android app
       - name: Build Android App
         env:
-          GRADLE_OPTS: "-Xmx2048m"  # Aumentar a heap size para 2 GB
+          GRADLE_OPTS: "-Xmx2048m" 
         run: |
           cd android
           chmod +x ./gradlew  # Garantir permissões de execução
@@ -46,7 +46,8 @@ jobs:
 
       # Step 7: Upload the APK as an artifact
       - name: Upload APK
-        uses: actions/upload-artifact@v3  # Usando a versão mais recente (v3)
+        id: upload-apk  # Adiciona um ID para esta etapa
+        uses: actions/upload-artifact@v3 
         with:
           name: app-debug.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
@@ -54,7 +55,8 @@ jobs:
       # Step 8: Notify on successful build with link to artifact
       - name: Notify on success with link to APK
         run: |
-          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
+          ARTIFACT_ID="${{ steps.upload-apk.outputs.artifact_id }}"  # Captura o ID do artefato
+          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${ARTIFACT_ID}"  # URL completa do artefato
           MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK [aqui](${ARTIFACT_URL})."
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
