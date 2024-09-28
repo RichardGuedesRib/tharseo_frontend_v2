@@ -37,19 +37,21 @@ jobs:
         run: |
           eas build --platform android --profile development --non-interactive | tee build_output.txt
 
-      # Step 7: Capture the build link
-      - name: Capture Build Link
-        id: capture_link
+      # Step 7: Capture the build link and send a message to Telegram
+      - name: Capture Build Link and Send Telegram Message
         run: |
           BUILD_PAGE_URL=$(grep -o "https://expo.dev/accounts/.*/projects/.*/builds/.*" build_output.txt)
-          echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}" >> $GITHUB_ENV
-          echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}"
-
-      # Step 8: Send message to Telegram with the captured link
-      - name: Send message to Telegram
-        if: success()
-        run: |
           MESSAGE="Novidades! Temos uma nova versão de desenvolvimento!\nLink: $BUILD_PAGE_URL\nPara mais informações ou download acesse o link ou copie o link no seu expo para acesso ao preview."
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="${MESSAGE}" \
+          -d parse_mode="Markdown"
+
+      # Step 8: Notify on failure
+      - name: Notify on failure
+        if: failure()
+        run: |
+          MESSAGE="🚨 Ocorreu um erro durante o processo de build do aplicativo!\nPor favor, verifique os logs para mais informações."
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
           -d text="${MESSAGE}" \
