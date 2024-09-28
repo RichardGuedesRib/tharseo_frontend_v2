@@ -10,19 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 16
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      - name: Log in to Expo
-        run: npx expo login --token ${{ secrets.EXPO_TOKEN }}
+      # Step 4: Set Expo Token environment variable
+      - name: Set EXPO_TOKEN
+        run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
+      # Step 5: EAS Build for Android (Development)
       - name: EAS Build (Android - Development)
         run: eas build --platform android --profile development --non-interactive
