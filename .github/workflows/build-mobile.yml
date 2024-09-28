@@ -37,21 +37,25 @@ jobs:
         run: |
           eas build --platform android --profile development --non-interactive | tee build_output.txt
 
-      # Step 7: Get APK URL from build output
+      # Step 7: Get APK URL from build output (adjusted to find the full link)
       - name: Get APK URL
         id: apk_url
         run: |
-          APK_URL=$(grep -o "https://expo.dev/artifacts/.*apk" build_output.txt)
+          BUILD_PAGE_URL=$(grep -o "https://expo.dev/accounts/.*/projects/.*/builds/.*" build_output.txt)
+          echo "BUILD_PAGE_URL=${BUILD_PAGE_URL}"
+          APK_URL=$(curl -s $BUILD_PAGE_URL | grep -oP 'https://expo-artifacts\.s3\.amazonaws\.com/.*\.apk')
           echo "APK_URL=${APK_URL}"
           echo "APK_URL=${APK_URL}" >> $GITHUB_ENV
 
       # Step 8: Download APK using the URL
       - name: Download APK
+        if: success()
         run: |
           curl -o app.apk $APK_URL
 
       # Step 9: Send APK to Telegram
       - name: Send APK to Telegram
+        if: success()
         run: |
           curl -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
                -F document=@app.apk \
