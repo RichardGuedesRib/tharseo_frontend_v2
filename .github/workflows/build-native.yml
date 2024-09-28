@@ -3,7 +3,7 @@ name: Build React Native Android
 on:
   push:
     branches:
-      - develop-native  # Branch para builds Android
+      - develop-native  # Branch usada para o build de Android
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'  # Atualizado para Node.js 18 para compatibilidade com React Native
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -28,33 +28,31 @@ jobs:
       - name: Install React Native CLI
         run: npm install -g react-native-cli
 
-      # Step 5: Grant execute permission for Gradle wrapper
-      - name: Grant execute permission for Gradle wrapper
-        run: chmod +x android/gradlew
-
-      # Step 6: Build the Android app
+      # Step 5: Build the Android app
       - name: Build Android App
         run: |
           cd android
+          chmod +x ./gradlew  # Garantir permissões de execução
           ./gradlew assembleDebug
 
-      # Step 7: Upload the APK as an artifact
+      # Step 6: Upload the APK as an artifact
       - name: Upload APK
-        uses: actions/upload-artifact@v3  # Atualizado para v3
+        uses: actions/upload-artifact@v3  # Usando a versão mais recente (v3)
         with:
           name: app-debug.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
-      # Step 8: Notify on successful build
-      - name: Notify on success
+      # Step 7: Notify on successful build with link to artifact
+      - name: Notify on success with link to APK
         run: |
-          MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK."
+          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK [aqui](${ARTIFACT_URL})."
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
           -d text="${MESSAGE}" \
           -d parse_mode="Markdown"
 
-      # Step 9: Notify on failure
+      # Step 8: Notify on failure
       # - name: Notify on failure
       #   if: failure()
       #   run: |
