@@ -52,14 +52,14 @@ jobs:
       # Step 8: Notify on successful build with link to artifact
       - name: Notify on success with link to APK
         run: |
-          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
           MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK [aqui](${ARTIFACT_URL})."
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
           -d text="${MESSAGE}" \
           -d parse_mode="Markdown"
 
-      # # Step 9: Notify on failure
+      # Step 9: Notify on failure
       # - name: Notify on failure
       #   if: failure()
       #   run: |
