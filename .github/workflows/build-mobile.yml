@@ -47,16 +47,11 @@ jobs:
           echo "APK_URL=${APK_URL}"
           echo "APK_URL=${APK_URL}" >> $GITHUB_ENV
 
-      # Step 8: Download APK using the URL
-      - name: Download APK
+      # Step 8: Send APK link to Telegram
+      - name: Send APK link to Telegram
         if: success()
         run: |
-          curl -o app.apk $APK_URL
-
-      # Step 9: Send APK to Telegram
-      - name: Send APK to Telegram
-        if: success()
-        run: |
-          curl -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-               -F document=@app.apk \
-               https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument
+          MESSAGE="Download APK: ${APK_URL}"
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="${MESSAGE}"
