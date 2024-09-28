@@ -36,7 +36,7 @@ jobs:
 
       # Step 6: Upload the APK as an artifact
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Atualizado para v3
         with:
           name: app-debug.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
