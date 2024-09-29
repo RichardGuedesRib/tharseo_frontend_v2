@@ -3,7 +3,6 @@ import socketserver
 
 class DownloadHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
-        # Adiciona cabeçalho para forçar o download
         self.send_header("Content-Disposition", f"attachment; filename=\"{self.path.split('/')[-1]}\"")
         self.send_header("Content-Type", "application/octet-stream") 
         super().end_headers()
