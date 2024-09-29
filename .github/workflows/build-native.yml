@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.THARSEO_BACKEND_PASS }}
           port: 22
           source: test-upload.txt
-          target: /home/richardguedes/tharseo/data/
+          target: /home/tharseo/apk/  # Atualizado para o novo diretório
 
       # Step 4: Start a simple HTTP server on the VM
       - name: Start Simple HTTP Server on Azure VM
@@ -37,11 +37,11 @@ jobs:
           username: ${{ secrets.THARSEO_BACKEND_HOST_USER }}
           password: ${{ secrets.THARSEO_BACKEND_PASS }}
           script: |
-            cd /home/richardguedes/tharseo/data
+            cd /home/tharseo/apk  # Atualizado para o novo diretório
             nohup python3 -m http.server 8500 &
 
       # Step 5: Notify with the download link
-      - name: Notify with Download Link
+      - name: Notify with Download Link 
         run: |
           FILE_URL="http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/test-upload.txt"
           MESSAGE="🎉 O arquivo está disponível para download! Você pode baixá-lo [aqui](${FILE_URL})."
