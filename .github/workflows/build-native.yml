@@ -1,4 +1,4 @@
-name: Build React Native Android
+name: Test Upload Functionality
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - develop-native  
 
 jobs:
-  build:
+  upload-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,74 +14,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Step 2: Notify that the deploy has started
-      # - name: Notify that deploy has started
-      #   run: |
-      #     MESSAGE="🚀 Um deploy MOBILE na branch *develop-native* foi iniciado! A previsão para conclusão é de 12 minutos."
-      #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-      #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-      #     -d text="${MESSAGE}" \
-      #     -d parse_mode="Markdown"
+      # Step 3: Create a test file
+      - name: Create a test file
+        run: echo "Este é um teste de upload." > test-upload.txt
 
-      # Step 3: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      # Step 4: Upload the test file as an artifact
+      - name: Upload Test File
+        uses: actions/upload-artifact@v3 
         with:
-          node-version: '18'
-          
-      # Step 4: Install Java 17
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin' 
+          name: test-upload.txt
+          path: test-upload.txt
 
-      # Step 5: Install dependencies
-      - name: Install dependencies
-        run: npm install
-
-      # Step 6: Install React Native CLI
-      - name: Install React Native CLI
-        run: npm install -g react-native-cli
-
-      # Step 7: Clean Gradle Cache and Build the Android app
-      - name: Build Android App
-        env:
-          GRADLE_OPTS: "-Xmx2048m" 
-        run: |
-          cd android
-          chmod +x ./gradlew  # Garantir permissões de execução
-          ./gradlew clean assembleDebug --info  # Executa a limpeza e constrói com mais informações
-
-      # Step 8: Create a new release and upload the APK
-      - name: Create Release and Upload APK
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v1.${{ github.run_number }}  # Use a versão desejada
-          release_name: Release v1.${{ github.run_number }}
-          draft: false
-          prerelease: false
-          files: android/app/build/outputs/apk/debug/app-debug.apk  # Upload do APK
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token do GitHub
-
-      # Step 9: Notify on successful build with link to APK
-      - name: Notify on success with link to APK
-        run: |
-          TAG="v1.${{ github.run_number }}"  # Use a versão desejada
-          APK_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/app-debug.apk"  # URL completa do APK
-          MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK [aqui](${APK_URL})."
-          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-          -d text="${MESSAGE}" \
-          -d parse_mode="Markdown"
-
-      # Step 10: Notify on failure
-      # - name: Notify on failure
-      #   if: failure()
-      #   run: |
-      #     MESSAGE="🚨 Ocorreu um erro durante o processo de build do aplicativo!\nPor favor, verifique os logs para mais informações."
-      #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-      #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-      #     -d text="${MESSAGE}" \
-      #     -d parse_mode="Markdown"
+     
