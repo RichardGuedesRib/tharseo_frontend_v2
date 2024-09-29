@@ -40,12 +40,4 @@ jobs:
             cd /home/tharseo/apk  # Atualizado para o novo diretório
             nohup python3 -m http.server 8500 &
 
-      # Step 5: Notify with the download link
-      - name: Notify with Download Link 
-        run: |
-          FILE_URL="http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/test-upload.txt"
-          MESSAGE="🎉 O arquivo está disponível para download! Você pode baixá-lo [aqui](${FILE_URL})."
-          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-            -d text="${MESSAGE}" \
-            -d parse_mode="Markdown"
+     
