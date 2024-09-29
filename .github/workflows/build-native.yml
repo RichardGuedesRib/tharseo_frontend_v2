@@ -14,15 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # # Step 2: Notify that the deploy has started
-      # - name: Notify that deploy has started
-      #   run: |
-      #     MESSAGE="🚀  Deploy MOBILE na branch *develop-native* foi iniciado! A previsão para conclusão é de 12 minutos."
-      #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-      #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-      #     -d text="${MESSAGE}" \
-      #     -d parse_mode="Markdown"
-
       # Step 3: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -36,7 +27,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin' 
 
-      # Step 5: Install dependencies##
+      # Step 5: Install dependencies
       - name: Install dependencies
         run: npm install
 
@@ -62,10 +53,9 @@ jobs:
           password: ${{ secrets.THARSEO_BACKEND_PASS }}
           port: 22
           source: android/app/build/outputs/apk/debug/app-debug.apk
-          target: /home/tharseo/apk/
+          target: /home/tharseo/apk/  # Corrigido o caminho de destino
 
-
-     # Step 9: Check if download_server.py exists and upload if not###
+      # Step 9: Check if download_server.py exists and upload if not
       - name: Check and upload download server script
         uses: appleboy/scp-action@master
         with:
@@ -76,7 +66,7 @@ jobs:
           source: download_server.py
           target: /home/tharseo/apk/
 
-     # Step 10: Start Simple HTTP Server on Azure VM
+      # Step 10: Start Simple HTTP Server on Azure VM
       - name: Start Simple HTTP Server on Azure VM
         uses: appleboy/ssh-action@master
         with:
@@ -93,31 +83,17 @@ jobs:
               echo "O script download_server.py já existe no servidor."
             fi
             
+            # Verificar se o servidor está rodando e reiniciar se necessário
+            if lsof -i :8500; then
+              echo "Servidor já está rodando na porta 8500. Reiniciando..."
+              pkill -f download_server.py  # Mata o processo atual do servidor
+            fi
+            
             # Iniciar o servidor HTTP
             nohup python3 /home/tharseo/apk/download_server.py &
-
 
       # Step 11: List download link
       - name: List download link
         run: |
           echo "O APK está disponível para download em: http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/app-debug.apk" \
           | tee -a $GITHUB_ENV
-
-      # # Step 12: Notify on successful build with link to APK
-      # - name: Notify on success with link to APK
-      #   run: |
-      #     MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi construída com sucesso! Você pode baixar o APK [aqui](http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/app-debug.apk)."
-      #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-      #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-      #     -d text="${MESSAGE}" \
-      #     -d parse_mode="Markdown"
-
-      # # Step 13: Notify on failure
-      # - name: Notify on failure
-      #   if: failure()
-      #   run: |
-      #     MESSAGE="🚨 Ocorreu um erro durante o processo de build do aplicativo!\nPor favor, verifique os logs para mais informações."
-      #     curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-      #     -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-      #     -d text="${MESSAGE}" \
-      #     -d parse_mode="Markdown"
