@@ -14,6 +14,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Step 2: Set up JDK # Step 2: Notify that the deploy has started
+      - name: Notify that deploy has started
+        run: |
+          MESSAGE="🚀  Deploy MOBILE na branch *develop-native* foi iniciado! A previsão para conclusão é de 12 minutos."
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="${MESSAGE}" \
+          -d parse_mode="Markdown"
+
       # Step 3: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -113,3 +122,23 @@ jobs:
         run: |
           echo "O APK está disponível para download em: http://tharseo.zapto.org:8500/app-release.apk" 
           
+      # Step 14: Notify on successful build with link to artifact
+      - name: Notify on success with link to APK
+        if: success()
+        run: |
+          ARTIFACT_URL="http://tharseo.zapto.org:8500/app-release.apk"
+          MESSAGE="🎉 A nova versão de desenvolvimento do aplicativo foi buildada com sucesso! Desinstale a antiga e instale a nova! Você pode baixar o APK [aqui](${ARTIFACT_URL})."
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="${MESSAGE}" \
+          -d parse_mode="Markdown"
+
+      # Step 15: Notify on failure
+      - name: Notify on failure
+        if: failure()
+        run: |
+          MESSAGE="🚨 Ocorreu um erro durante o processo de build do aplicativo! Por favor, verifique os logs para mais informações."
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="${MESSAGE}" \
+          -d parse_mode="Markdown"
