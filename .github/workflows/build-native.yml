@@ -40,4 +40,8 @@ jobs:
             cd /home/tharseo/apk  # Atualizado para o novo diretório
             nohup python3 -m http.server 8500 &
 
-     
+      # Step 5: Display the download link###
+      - name: Display Download Link
+        run: |
+          FILE_URL="http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/test-upload.txt"
+          echo "🎉 O arquivo está disponível para download! Você pode baixá-lo aqui: ${FILE_URL}"
