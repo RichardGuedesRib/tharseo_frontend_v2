@@ -1,0 +1,14 @@
+import http.server
+import socketserver
+
+class DownloadHandler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        filename = self.path.split("/")[-1]
+        self.send_header("Content-Disposition", f"attachment; filename=\"{filename}\"")
+        super().end_headers()
+
+PORT = 8500
+
+with socketserver.TCPServer(("", PORT), DownloadHandler) as httpd:
+    print(f"Servindo em http://localhost:{PORT}")
+    httpd.serve_forever()

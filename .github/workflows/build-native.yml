@@ -16,7 +16,7 @@ jobs:
 
       # Step 2: Create a test file
       - name: Create a test file
-        run: echo "Este é um teste de upload." > test-upload.txt
+        run: echo "Este é um teste de upload." > test-upload.apk
 
       # Step 3: Upload the test file to Azure VM
       - name: Upload Test File to Azure VM
@@ -26,10 +26,22 @@ jobs:
           username: ${{ secrets.THARSEO_BACKEND_HOST_USER }}
           password: ${{ secrets.THARSEO_BACKEND_PASS }}
           port: 22
-          source: test-upload.txt
-          target: /home/tharseo/apk/  # Atualizado para o novo diretório
+          source: test-upload.apk
+          target: /home/tharseo/apk/
 
-      # Step 4: Start a simple HTTP server on the VM
+      # Step 4: Check if download_server.py exists and upload if not
+      - name: Check and upload download server script
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.THARSEO_BACKEND_HOST }}
+          username: ${{ secrets.THARSEO_BACKEND_HOST_USER }}
+          password: ${{ secrets.THARSEO_BACKEND_PASS }}
+          port: 22
+          source: download_server.py
+          target: /home/tharseo/apk/
+          strip_components: 1  # Para evitar problemas com caminhos
+
+      # Step 5: Start Simple HTTP Server on Azure VM
       - name: Start Simple HTTP Server on Azure VM
         uses: appleboy/ssh-action@master
         with:
@@ -37,11 +49,15 @@ jobs:
           username: ${{ secrets.THARSEO_BACKEND_HOST_USER }}
           password: ${{ secrets.THARSEO_BACKEND_PASS }}
           script: |
-            cd /home/tharseo/apk  # Atualizado para o novo diretório
-            nohup python3 -m http.server 8500 &
+            # Verificar se o script já está presente
+            if [ ! -f /home/tharseo/apk/download_server.py ]; then
+              cp ~/apk/download_server.py /home/tharseo/apk/
+            fi
+            
+            # Iniciar o servidor HTTP
+            nohup python3 /home/tharseo/apk/download_server.py &
 
-      # Step 5: Display the download link###
-      - name: Display Download Link
+      # Step 6: List download link
+      - name: List download link
         run: |
-          FILE_URL="http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/test-upload.txt"
-          echo "🎉 O arquivo está disponível para download! Você pode baixá-lo aqui: ${FILE_URL}"
+          echo "O arquivo está disponível para download em: http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/test-upload.apk"
