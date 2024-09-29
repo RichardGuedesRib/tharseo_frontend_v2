@@ -36,27 +36,27 @@ jobs:
         run: npm install -g react-native-cli
 
       # Step 7: Clean Gradle Cache and Build the Android app
-      - name: Build Android App
+      - name: Build Android App (Release)
         env:
           GRADLE_OPTS: "-Xmx4096m"
         run: |
           cd android
-          chmod +x ./gradlew  # Garantir permissões de execução
-          ./gradlew clean assembleDebug --info  # Executa a limpeza e constrói com mais informações
+          chmod +x ./gradlew  
+          ./gradlew clean assembleRelease --info  # Executa a limpeza e constrói com mais informações
 
       # Step 8: Upload the APK as an artifact
       - name: Upload APK
         id: upload-apk
         uses: actions/upload-artifact@v3 
         with:
-          name: app-debug.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: app-release.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
 
       # Step 9: Download APK artifact
       - name: Download APK artifact
         uses: actions/download-artifact@v3
         with:
-          name: app-debug.apk
+          name: app-release.apk
 
       # Step 10: Upload APK to Azure VM
       - name: Upload APK to Azure VM
@@ -66,8 +66,8 @@ jobs:
           username: ${{ secrets.THARSEO_BACKEND_HOST_USER }}
           password: ${{ secrets.THARSEO_BACKEND_PASS }}
           port: 22
-          source: app-debug.apk  # O arquivo baixado do artefato
-          target: /home/tharseo/apk/  # Caminho correto no servidor
+          source: app-release.apk  
+          target: /home/tharseo/apk/ 
 
       # Step 11: Check if download_server.py exists and upload if not
       - name: Check and upload download server script
@@ -111,5 +111,5 @@ jobs:
       # Step 13: List download link
       - name: List download link
         run: |
-          echo "O APK está disponível para download em: http://${{ secrets.THARSEO_BACKEND_HOST }}:8500/app-debug.apk" \
-          | tee -a $GITHUB_ENV
+          echo "O APK está disponível para download em: http://tharseo.zapto.org:8500/app-release.apk" 
+          
