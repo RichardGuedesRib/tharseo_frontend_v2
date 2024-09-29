@@ -38,7 +38,7 @@ jobs:
       # Step 7: Clean Gradle Cache and Build the Android app
       - name: Build Android App
         env:
-          GRADLE_OPTS: "-Xmx2048m" 
+          GRADLE_OPTS: "-Xmx4096m"
         run: |
           cd android
           chmod +x ./gradlew  # Garantir permissões de execução
