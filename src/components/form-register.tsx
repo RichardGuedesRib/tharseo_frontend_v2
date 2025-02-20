@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import React from "react";
+import { authService } from "@/api/auth/authService";
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z
   .object({
@@ -34,6 +37,7 @@ const formSchema = z
 
 export function RegisterForm() {
   const [step, setStep] = React.useState(1);
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,9 +62,51 @@ export function RegisterForm() {
       setStep((prevStep) => prevStep + 1);
     }
   }
-  function onSubmit(values: z.infer<typeof formSchema>) {
+ async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const data = {
+      name: values.name,
+      lastName: values.lastName,
+      email: values.email,
+      password: values.password,
+      phone: values.phone,
+      levelUser: "user",
+      credentialId: null,
+      walletId: null,
+      balance: 0,
+      isActive: true
+    }
+
+    try {
+      await authService.registerUser(data);
+  
+      toast.success("Usuário Cadastrado com sucesso!",{
+        duration: 5000,
+        position: "top-right"
+      });
+
+      form.reset();
+      setTimeout(() => {
+        navigate("/signin"); 
+      }, 1000);
+      
+      
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message,{
+          duration: 5000,
+          position: "top-right"
+        });
+      } else {
+        toast.error("Erro desconhecido ao registrar usuário.",{
+          duration: 5000,
+          position: "top-right"
+        });
+      }
+    }
+   
   }
+  
 
   return (
     <div className="flex flex-col gap-6 justify-center align-center">

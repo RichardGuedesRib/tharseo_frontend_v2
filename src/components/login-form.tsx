@@ -13,7 +13,7 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <form>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-10">
           <div className="flex flex-col items-center gap-2">
           
             <img src="/images/tharseo.png" alt="Tharseo" />
