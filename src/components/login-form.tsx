@@ -1,18 +1,90 @@
 import { GalleryVerticalEnd } from "lucide-react"
+import React from 'react'
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link } from "react-router-dom"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { authService } from "@/api/auth/authService";
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from '../store/useAuthStore';
+
+
+const formSchema = z
+  .object({
+    email: z.string().email("Informe um email válido."),
+    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
+ 
+  });
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [step, setStep] = React.useState(1);
+  const navigate = useNavigate();
+
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+     
+    },
+  });
+
+  async function handleNextStep() {
+    const isValid = await form.trigger("email");
+    if (isValid) {
+      setStep(2);
+    }
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+
+    const data = {
+      email: values.email,
+      password: values.password
+    }
+
+    try {
+      const login = await authService.signIn(data);
+      useAuthStore.getState().setAuth({
+        user: login.user,
+        token: login.token,
+        expiresIn: login.expiresIn,
+    });
+      toast.success("Usuário logado com sucesso!",{
+        duration: 5000,
+        position: "top-right"
+      });
+      navigate("/dashboard");
+
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message,{
+          duration: 5000,
+          position: "top-right"
+        });
+      } else {
+        toast.error("Erro desconhecido ao efetuar login.",{
+          duration: 5000,
+          position: "top-right"
+        });
+      }
+    }
+
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-10">
           <div className="flex flex-col items-center gap-2">
           
@@ -22,20 +94,42 @@ export function LoginForm({
               <Link to="/signup">Inscreva-se</Link>
             </div>
           </div>
+  {/* Step 1: Email */}
+  {step === 1 && (
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-white">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                className="text-white"
+                {...form.register("email")}
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
+            <Button type="button" onClick={handleNextStep} className="h-10">Próximo</Button>
           </div>
+            )}
+                {/* Step 2: Senha */}
+          {step === 2 && (
+            <div className="grid gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="password" className="text-white">Senha</Label>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  placeholder="Sua senha" 
+                  className="text-white" 
+                  {...form.register("password")} 
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">Login</Button>
+            </div>
+          )}
+
+
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-zinc-200 dark:after:border-zinc-800">
            
           </div>

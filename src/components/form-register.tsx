@@ -78,7 +78,7 @@ export function RegisterForm() {
     }
 
     try {
-      await authService.registerUser(data);
+      await authService.signUp(data);
   
       toast.success("Usuário Cadastrado com sucesso!",{
         duration: 5000,
