@@ -1,6 +1,6 @@
 import AppRoutes from "./routes";
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
   const app = initializeApp(firebaseConfig);
   //tslint:disable-next-line
   const analytics = getAnalytics(app);
+  logEvent(analytics, 'notification_received');
 
 
 
