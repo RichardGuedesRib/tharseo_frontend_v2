@@ -1,4 +1,3 @@
-"use client"
 
 import { type LucideIcon } from "lucide-react"
 
@@ -23,12 +22,12 @@ export function NavMain({
   return (
     <SidebarGroup className="group" >
       <SidebarGroupLabel className="text-text-primary group-data-[collapsed]:hidden"></SidebarGroupLabel>
-      <SidebarMenu className="text-text-primary">
+      <SidebarMenu className="text-text-primary gap-4">
         {items.map((item) => (
-          <SidebarMenuItem key={item.title}>
+          <SidebarMenuItem key={item.title} >
             <SidebarMenuButton asChild tooltip={item.title}>
               <a href={item.url} className="flex items-center gap-2">
-                <item.icon />
+                <item.icon className="mr-1" />
                 <span>{item.title}</span>
               </a>
             </SidebarMenuButton>

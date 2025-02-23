@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore"; // Ajuste o caminho para o seu store
+import { useAuthStore } from "@/store/useAuthStore"; 
 
 const Dashboard = () => {
   // Acessando o estado do store de forma eficiente
