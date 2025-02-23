@@ -21,7 +21,7 @@ jobs:
   #           -d parse_mode="Markdown"
 
   build_and_deploy:
-    needs: notify-start
+    # needs: notify-start
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
