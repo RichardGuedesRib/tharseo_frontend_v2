@@ -12,8 +12,8 @@ import { Label } from "@radix-ui/react-label";
 export function CardAssetAllocation() {
   return (
     <>
-      <Card className="bg-gray-800 text-white">
-        <CardHeader className="flex flex-row align-center items-center w-full">
+      <Card className="text-white max-w-sm mx-auto shadow-none border-none bg-transparent">
+        <CardHeader className="flex flex-row align-center items-center w-full space-y-1 p-2">
           <div className="bg-gray-500  flex flex-row rounded-full mr-2 justify-between">
             <Bitcoin size={40} />
           </div>
@@ -22,7 +22,7 @@ export function CardAssetAllocation() {
               <CardTitle>Bitcoinnn</CardTitle>
               <CardDescription className="text-white">$ 23,3B</CardDescription>
             </div>
-            <div className="flex flex-row align-center items-center justify-between mt-1">
+            <div className="flex flex-row align-center items-center justify-between mt-2">
               <CardDescription>
                 Deploy your new project in one-clickaa.
               </CardDescription>
@@ -30,8 +30,8 @@ export function CardAssetAllocation() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="flex flex-row align-center justify-center items-center gap-3">
-          <Progress value={71.68} className="w-full" /> <Label>71.68%</Label>
+        <CardContent className="flex flex-row align-center justify-center items-center gap-3 p-1">
+          <Progress value={61.68} className="w-full" /> <Label>71.68%</Label>
         </CardContent>
       </Card>{" "}
     </>
