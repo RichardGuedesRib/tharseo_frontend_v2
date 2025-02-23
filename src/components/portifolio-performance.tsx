@@ -1,15 +1,8 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Wallet, PiggyBank, TrendingUp } from "lucide-react";
 import CandlestickChart from "@/components/candlestick-chart";
 
-const data = [
-  { date: "17 Mar", open: 150, close: 180, high: 190, low: 140 },
-  { date: "18 Mar", open: 180, close: 200, high: 220, low: 170 },
-  { date: "19 Mar", open: 200, close: 400, high: 420, low: 180 },
-  { date: "20 Mar", open: 400, close: 350, high: 410, low: 330 },
-  { date: "21 Mar", open: 350, close: 450, high: 470, low: 340 },
-  { date: "22 Mar", open: 450, close: 430, high: 480, low: 420 },
-];
+
 
 export function PortfolioPerformance() {
   return (
