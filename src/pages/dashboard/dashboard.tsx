@@ -1,37 +1,19 @@
-import { Link } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore"; 
+import {ChainAllocation} from "@/components/chain-allocation";
+import {PortfolioPerformance} from "@/components/portifolio-performance";
 
 const Dashboard = () => {
-  // Acessando o estado do store de forma eficiente
-  const user = useAuthStore((state) => state.user);
-
   return (
-    <div>
-      <h1>Dashboard</h1>
-      
-      <Link to="#">Ir para Sobre</Link>
-
-      {/* Exibe o estado armazenado */}
-      <div className="mt-4">
-        {user ? (
-          <div className="bg-green-500 text-white p-4 rounded-xl">
-            <h2>Bem-vindo, {user.name}!</h2>
-            <p>Email: {user.email}</p>
-            <p>Balance: {user.balance}</p>
-            <p>Level: {user.levelUser}</p>
-          </div>
-        ) : (
-          <div className="bg-red-500 text-white p-4 rounded-xl">
-            <p>Usuário não autenticado!</p>
-          </div>
-        )}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4  bg-bg-principal min-h-screen ">
+      <div className="md:col-span-1 col-span-1 bg-gray-800 rounded-xl ">
+        <ChainAllocation />
       </div>
-
-      <div className="bg-blue-500 text-white p-4 ml-4 rounded-xl">
-        Tailwind está funcionando! 🚀
+      <div className="md:col-span-2 col-span-1">
+        <PortfolioPerformance />
       </div>
     </div>
   );
 };
 
 export default Dashboard;
+
+
