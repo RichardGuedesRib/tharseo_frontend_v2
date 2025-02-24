@@ -1,6 +1,6 @@
 {
     "hosting": {
-      "public": "build",
+      "public": "dist",
       "site": "tharseocripto",
       "ignore": [
         "firebase.json",
