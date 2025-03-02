@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   Send,
+  Wallet,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -39,33 +40,40 @@ const data = {
      
     },
     {
+      title: "Wallet",
+      url: "/wallet",
+      icon: Wallet,
+      isActive: true,
+     
+    },
+    {
       title: "Estratégias",
-      url: "#",
+      url: "/strategys",
       icon: ChartScatter,
       isActive: true,
      
     },
     {
       title: "Trade",
-      url: "#",
+      url: "trades",
       icon: ChartCandlestick,
     
     },
     {
       title: "Em Andamento",
-      url: "#",
+      url: "/open-trades",
       icon: BadgeDollarSign,
     
     },
     {
       title: "Histórico",
-      url: "#",
+      url: "/historics",
       icon: FileStack,
      
     },
     {
       title: "Configurações",
-      url: "#",
+      url: "/settings",
       icon: Cog,
      
     },
