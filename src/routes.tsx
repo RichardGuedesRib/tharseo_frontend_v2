@@ -10,6 +10,10 @@ import Historics from "@/pages/historics/historics";
 import Settings from "@/pages/settings/settings";
 import Strategys from "@/pages/strategys/strategys";
 import Trades from "@/pages/trades/trades";
+import FastGuide from "./pages/trades/fast-guide";
+import BackTesting from "./pages/trades/backtesting";
+import Support from "./pages/support/support";
+import Feedback from "./pages/feedback/feedback";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +31,10 @@ const AppRoutes = () => {
             <Route path="settings" element={<Settings/>} />
             <Route path="strategys" element={<Strategys/>} />
             <Route path="trades" element={<Trades/>} />
+            <Route path="fast-guide" element={<FastGuide/>} />
+            <Route path="backtesting" element={<BackTesting/>} />
+            <Route path="support" element={<Support/>} />
+            <Route path="feedback" element={<Feedback/>} />
             
 
           </Route>

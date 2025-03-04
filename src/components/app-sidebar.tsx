@@ -81,12 +81,12 @@ const data = {
   navSecondary: [
     {
       title: "Suporte",
-      url: "#",
+      url: "/support",
       icon: LifeBuoy,
     },
     {
       title: "Feedback",
-      url: "#",
+      url: "/feedback",
       icon: Send,
     },
   ],

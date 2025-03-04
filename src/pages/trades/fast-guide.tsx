@@ -1,13 +1,13 @@
 import Development from "@/components/development";
 
-const OpenTrades = () => {
+const FastGuide = () => {
   return (
     <div className=" bg-bg-principal w-full flex justify-center  ">
-       <Development/>
-       </div>
+    <Development/>
+    </div>
   );
 };
 
-export default OpenTrades;
+export default FastGuide;
 
 
