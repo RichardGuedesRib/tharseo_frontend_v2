@@ -17,7 +17,6 @@ import {
   ArrowUpDown,
   ChevronDown,
   SquarePen,
-  Star,
   BadgeCheck,
   MoreHorizontal,
   ChartScatter,
