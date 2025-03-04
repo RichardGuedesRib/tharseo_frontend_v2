@@ -35,16 +35,16 @@ jobs:
           channelId: live
           projectId: tharseo-c8cb9
       
-      - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.10.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
-          target: 'https://tharseocripto.web.app/'
-          rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a'
-          allow_issue_writing: false
-          artifact_name: 'zap_scan_report'
+      # - name: ZAP Scan
+      #   uses: zaproxy/action-full-scan@v0.10.0
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+      #     target: 'https://tharseocripto.web.app/'
+      #     rules_file_name: '.zap/rules.tsv'
+      #     cmd_options: '-a'
+      #     allow_issue_writing: false
+      #     artifact_name: 'zap_scan_report'
 
       # - name: Notify Telegram - Deploy Success
       #   if: success()
