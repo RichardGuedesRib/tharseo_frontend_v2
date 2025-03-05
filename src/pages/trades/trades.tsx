@@ -1,40 +1,85 @@
-import { Bot, ChartNetwork, CirclePlay } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Label } from "@radix-ui/react-label";
+import MenuTrade from "@/components/menu-trades";
+import { Bot, ChevronDown, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import TradesTable from "@/components/tables/trades-table";
 
 const Trades = () => {
+  const [selectedFilter, setSelectedFilter] = useState("Exibindo todos");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filters = [
+    { label: "Exibindo todos", value: "todos" },
+    { label: "Ativo", value: "ativo" },
+    { label: "Inativo", value: "inativo" },
+    { label: "Resultado Positivo", value: "positivo" },
+    { label: "Resultado Negativo", value: "negativo" },
+  ];
+
   return (
-    <div className="w-full bg-bg-principal p-4 flex justify-center">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl w-full">
-        <Link
-          to="/fast-guide"
-          className="flex items-center justify-center border border-white rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-200 p-1"
-        >
-          <div className="flex size-10 items-center justify-center text-white">
-            <CirclePlay className="size-5" />
-          </div>
-          <p className="text-sm font-semibold text-white ml-2">Guia rápido</p>
-        </Link>
+    <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">
+      <MenuTrade />
 
-        <Link
-          to="/open-trades"
-          className="flex items-center justify-center border border-white rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-200 p-1"
-        >
-          <div className="flex size-10 items-center justify-center text-white">
-            <Bot className="size-5" />
+      {/* Inicio Titulo e Filtros */}
+      <div className="w-full border border-white rounded-xl">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-4 text-white gap-4 sm:gap-0">
+          <div className="flex items-center gap-2">
+            <Label className="font-semibold text-2xl">Minhas Automações</Label>
+            <Badge variant="secondary">7 Automações</Badge>
           </div>
-          <p className="text-sm font-semibold text-white ml-2">Automações</p>
-        </Link>
 
-        <Link
-          to="/open-trades"
-          className="flex items-center justify-center border border-white rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-200 p-1"
-        >
-          <div className="flex size-10 items-center justify-center text-white">
-            <ChartNetwork className="size-5" />
+          <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-between sm:justify-end items-center">
+            {/* Dropdown Select */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex items-center justify-between w-full sm:w-[200px] border border-gray-300 rounded-md px-3 py-2 text-sm bg-bg-principal text-white cursor-pointer hover:bg-gray-100 hover:text-gray-900">
+                  {selectedFilter}
+                  <ChevronDown className="w-4 h-4 text-white hover:text-gray-900" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48 bg-bg-principal text-white">
+                {filters.map((filter) => (
+                  <DropdownMenuItem key={filter.value} onClick={() => setSelectedFilter(filter.label)}>
+                    {filter.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Search Input */}
+            <div className="relative w-full sm:w-[200px]">
+              <input
+                type="text"
+                placeholder="Buscar por automações"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-bg-principal text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              />
+              <Search className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
+            </div>
+
+            {/* Button */}
+            <div className="relative w-full sm:w-auto">
+              <Button>
+                <Bot />
+                Adicionar Automação
+              </Button>
+            </div>
           </div>
-          <p className="text-sm font-semibold text-white ml-2">BackTesting</p>
-        </Link>
+        </div>
       </div>
+      {/* Fim Título e Filtros */}
+
+      <TradesTable />          
+
     </div>
   );
 };
