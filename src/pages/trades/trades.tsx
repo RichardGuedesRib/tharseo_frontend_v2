@@ -1,28 +1,14 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Label } from "@radix-ui/react-label";
 import MenuTrade from "@/components/menu-trades";
-import { Bot, ChevronDown, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import TradesTable from "@/components/tables/trades-table";
+import AddAutomatorModal from "@/components/modals/add-strategy-automator";
 
 const Trades = () => {
-  const [selectedFilter, setSelectedFilter] = useState("Exibindo todos");
   const [searchTerm, setSearchTerm] = useState("");
-
-  const filters = [
-    { label: "Exibindo todos", value: "todos" },
-    { label: "Ativo", value: "ativo" },
-    { label: "Inativo", value: "inativo" },
-    { label: "Resultado Positivo", value: "positivo" },
-    { label: "Resultado Negativo", value: "negativo" },
-  ];
 
   return (
     <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">
@@ -38,7 +24,7 @@ const Trades = () => {
 
           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-between sm:justify-end items-center">
             {/* Dropdown Select */}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="flex items-center justify-between w-full sm:w-[200px] border border-gray-300 rounded-md px-3 py-2 text-sm bg-bg-principal text-white cursor-pointer hover:bg-gray-100 hover:text-gray-900">
                   {selectedFilter}
@@ -52,7 +38,7 @@ const Trades = () => {
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             {/* Search Input */}
             <div className="relative w-full sm:w-[200px]">
@@ -68,18 +54,14 @@ const Trades = () => {
 
             {/* Button */}
             <div className="relative w-full sm:w-auto">
-              <Button>
-                <Bot />
-                Adicionar Automação
-              </Button>
+            <AddAutomatorModal />
             </div>
           </div>
         </div>
       </div>
       {/* Fim Título e Filtros */}
-
-      <TradesTable />          
-
+      <TradesTable /> 
+     
     </div>
   );
 };
