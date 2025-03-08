@@ -1,50 +1,129 @@
-# React + TypeScript + Vite
+# Tharseo Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 **Tharseo** é um automatizador de operações em cripto, oferecendo uma interface intuitiva e dinâmica para gerenciamento de estratégias de trading. Este repositório contém o frontend da aplicação, desenvolvido com **React (TSX)**, utilizando **Zustand** para gerenciamento de estado e **Cypress** para testes.
 
-Currently, two official plugins are available:
+## 📌 Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React (TSX)** – Interface declarativa e performática.
+- **Vite** – Build rápido e otimizado.
+- **Zustand** – Gerenciamento de estado minimalista e eficiente.
+- **Cypress** – Testes end-to-end automatizados.
+- **TailwindCSS** (opcional) – Estilização moderna e flexível.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🚀 Como Rodar o Projeto
 
-- Configure the top-level `parserOptions` property like this:
+### 1️⃣ Clonar o Repositório
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```sh
+ git clone https://github.com/seu-usuario/tharseo-front.git
+ cd tharseo-front
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### 2️⃣ Instalar Dependências
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+ npm install
 ```
+
+### 3️⃣ Definir Variáveis de Ambiente
+
+Crie um arquivo **.env** na raiz do projeto e adicione:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+### 4️⃣ Rodar o Servidor Localmente
+
+```sh
+ npm run dev
+```
+
+O frontend estará disponível em `http://localhost:5173/` (porta pode variar).
+
+---
+
+## 📦 Build para Produção
+
+Antes de subir o código para produção, execute:
+
+```sh
+ npm run build
+```
+
+Isso gera um diretório `dist/` otimizado e pronto para deploy.
+
+---
+
+## 🧪 Testes End-to-End (E2E) com Cypress
+
+Para rodar os testes automatizados:
+
+```sh
+ npm run test:e2e
+```
+
+Ou para abrir o painel interativo do Cypress:
+
+```sh
+ npm run cypress:open
+```
+
+---
+
+## 🎯 Gerenciamento de Estado com Zustand
+
+O Zustand é utilizado para armazenar estados globais da aplicação, garantindo performance e simplicidade. Exemplo de um store:
+
+```tsx
+import { create } from 'zustand';
+
+interface UseStore {
+  user: string;
+  setUser: (name: string) => void;
+}
+
+export const useStore = create<UseStore>((set) => ({
+  user: '',
+  setUser: (name) => set({ user: name }),
+}));
+```
+
+---
+
+## 📌 Estrutura de Pastas
+
+```
+📦 tharseo-front
+├── 📂 src
+│   ├── 📂 components  # Componentes reutilizáveis
+│   ├── 📂 hooks       # Hooks customizados
+│   ├── 📂 pages       # Páginas da aplicação
+│   ├── 📂 store       # Zustand (gerenciamento de estado)
+│   ├── 📂 tests       # Testes Cypress
+│   ├── 📜 main.tsx    # Ponto de entrada do App
+│   ├── 📜 App.tsx     # Componente principal
+├── 📜 .env            # Configurações de ambiente
+├── 📜 package.json    # Dependências e scripts
+└── ...
+```
+
+---
+
+## 💡 Contribuição
+
+Contribuições são bem-vindas! Para colaborar:
+
+1. Faça um fork do repositório
+2. Crie uma branch com sua feature (`git checkout -b minha-feature`)
+3. Commit suas mudanças (`git commit -m 'Minha feature'`)
+4. Envie um PR (`git push origin minha-feature`)
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Sinta-se livre para usá-lo e melhorá-lo! 🚀
+
