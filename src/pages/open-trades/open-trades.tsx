@@ -11,12 +11,36 @@ import {
 import OpenTradesTable from "@/components/tables/open-trades-table";
 import AddOrderModal from "@/components/modals/add-order";
 
+  /**
+   * Pagina de trades em andamento, contendo um título e filtros,
+   * uma tabela com os trades em andamento e um botão para adicionar um novo trade.
+   *
+   * O componente OpenTrades é o principal da aplicação, ele renderiza
+   * uma página com título, filtros e uma tabela com os trades em andamento.
+   *
+   * A página é renderizada em um container com fundo cinza claro e é
+   * responsiva, ou seja, o layout muda de acordo com o tamanho da tela.
+   *
+   * O título da página é "Trades em Andamento" e tem um badge com o
+   * número de trades em andamento.
+   *
+   * Os filtros são renderizados em um dropdown menu e permitem ao usuário
+   * filtrar os trades em andamento por ativos ou inativos.
+   *
+   * A tabela é renderizada com os trades em andamento e tem as colunas
+   * "Ativo", "Quantidade", "Pre o de Entrada", "Pre o Atual", "Lucro",
+   * "Data de Entrada" e "Data de Sa da".
+   *
+   * O botão para adicionar um novo trade é renderizado em uma div com
+   * fundo branco e tem um texto "Adicionar Novo Trade".
+   */
 const OpenTrades = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Todos");
 
   const filters = [
     { label: "Ativos", value: "ativos" },
+    { label: "Inativos", value: "inativos" },
     { label: "Inativos", value: "inativos" },
   ];
 

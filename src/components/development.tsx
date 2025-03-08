@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Bot} from "lucide-react";
 
+/**
+ * Componente para exibir uma página de desenvolvimento, com um
+ * loading animation e um texto de feedback.
+ *
+ * @returns {JSX.Element} O JSX do componente.
+ */
 export default function Development() {
   return (
     <div className="container h-screen max-h-96 flex justify-center items-center text-white 	">

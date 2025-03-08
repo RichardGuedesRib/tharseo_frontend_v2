@@ -34,6 +34,13 @@ const filtersStrategy = [
 
    
 
+/**
+ * Abre um modal para adicionar uma automação
+ * Escolha o ativo e a estratégia que deseja automatizar
+ * @returns {
+ *   JSX.Element
+ * }
+ */
 export default function AddAutomatorModal() {
   const [selectedAsset, setSelectedAsset] = useState("Selecione o Ativo");
   const [selectedStrategy, setSelectedStrategy] = useState("Selecione a Estratégia");
