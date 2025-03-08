@@ -8,7 +8,6 @@ import TradesTable from "@/components/tables/trades-table";
 import AddAutomatorModal from "@/components/modals/add-strategy-automator";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,

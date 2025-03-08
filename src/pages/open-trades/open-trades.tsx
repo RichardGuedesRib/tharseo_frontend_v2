@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@radix-ui/react-label";
 import { Search, ChevronDown } from "lucide-react";
-import AddAutomatorModal from "@/components/modals/add-strategy-automator";
 import {
   DropdownMenu,
   DropdownMenuContent,

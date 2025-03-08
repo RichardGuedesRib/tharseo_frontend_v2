@@ -16,13 +16,7 @@ import {
 import {
   ArrowUpDown,
   ChevronDown,
-  SquarePen,
-  MoreHorizontal,
-  Bot,
-  ToggleRight,
-  ToggleLeft,
   ChartLine,
-  View,
   Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +25,6 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import {
   Table,
@@ -92,8 +85,6 @@ export default function OpenTradesTable() {
     },
     
   ];
-
-  const handleActiveAutomator = (id : string) => {console.log("Ativou o trade: ", id)};
 
   useEffect(() => {
     setDataLoading(true);
