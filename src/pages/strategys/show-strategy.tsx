@@ -116,7 +116,7 @@ export function ShowStrategy({
         <DialogFooter className="flex justify-between">
           {isEditing ? (
             <>
-              <Button variant="outline" onClick={() => setIsEditing(false)}>
+              <Button variant="secondary" onClick={() => setIsEditing(false)}>
                 Cancelar
               </Button>
               <Button onClick={handleSave}>Salvar</Button>
