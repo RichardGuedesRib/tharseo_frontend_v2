@@ -11,16 +11,18 @@ permissions:
   pull-requests: write
 
 jobs:
-  # notify-start:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Notify Telegram - Workflow Started
-  #       run: |
-  #         MESSAGE="🚀 Novidades! Um deploy de preview do frontend web do Tharseo foi iniciado para o PR #${{ github.event.number }}... A previsão do término é de 3 minutos."
-  #         curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-  #           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-  #           -d text="${MESSAGE}" \
-  #           -d parse_mode="Markdown"
+  notify-start:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Telegram - Workflow Started
+        run: |
+          COMMIT_LIST=$(git log --pretty=format:"%h - %s" -n 5)
+          
+          MESSAGE="🚀 Novidades! Um deploy de preview do frontend web do Tharseo foi iniciado para o PR #${{ github.event.number }}... A previsão do término é de 3 minutos."
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="${MESSAGE}" \
+            -d parse_mode="Markdown"
 
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
@@ -28,9 +30,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Copiar .env.production.example para .env
+        run: cp .env.production.example .env
+        
       - run:  npm ci &&npm run build
+
       - name: List dist directory
         run: ls -R dist 
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
