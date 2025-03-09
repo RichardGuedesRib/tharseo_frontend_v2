@@ -47,6 +47,8 @@ export function LoginForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
 
+    console.log("Entrou no onsubmit");
+
     const data = {
       email: values.email,
       password: values.password

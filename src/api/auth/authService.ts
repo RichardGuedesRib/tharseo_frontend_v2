@@ -43,6 +43,10 @@ export const authService = {
 
     async signIn(data: SignIn) {
       try {
+        
+        console.log("Entrou no sign in", data);
+
+        console.log("Base API", import.meta.env.VITE_API_URL);
   
         const response = await fetch(import.meta.env.VITE_API_URL + '/auth/signin', {
           method: 'POST',
