@@ -29,9 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Copiar .env.production.example para .env
-        run: cp .env.production.example .env
-
       - run:  npm ci && npm run build
 
       - name: List dist directory
