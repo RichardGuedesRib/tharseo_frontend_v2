@@ -14,38 +14,38 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
-  expiresIn: number | null;
+  expiresAt: number | null; 
   setAuth: (payload: { user: User; token: string; expiresIn: number }) => void;
   logout: () => void;
+  isTokenValid: () => boolean; 
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       token: null,
-      expiresIn: null,
+      expiresAt: null, 
 
-      setAuth: (payload) =>
-        set(() => ({
-          user: payload.user,
-          token: payload.token,
-          expiresIn: payload.expiresIn,
-        })),
+      setAuth: ({ user, token, expiresIn }) => {
+        const expiresAt = Date.now() + expiresIn * 1000;
+        set({ user, token, expiresAt });
+      },
 
-      logout: () =>
-        set(() => ({
-          user: null,
-          token: null,
-          expiresIn: null,
-        })),
+      logout: () => set({ user: null, token: null, expiresAt: null }),
+
+      isTokenValid: () => {
+        const { token, expiresAt } = get();
+        if (!token || !expiresAt) return false;
+        return Date.now() < expiresAt; 
+      },
     }),
     {
-      name: "auth-storage", 
-            storage: {
+      name: "auth-storage",
+      storage: {
         getItem: (name: string) => {
           const item = localStorage.getItem(name);
-          return item ? JSON.parse(item) : null; 
+          return item ? JSON.parse(item) : null;
         },
         setItem: (name: string, value: any) => {
           localStorage.setItem(name, JSON.stringify(value));
