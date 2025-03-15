@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Strategy } from "@/models/Strategy";
 
 export function ShowStrategy({
   open,
@@ -11,7 +12,7 @@ export function ShowStrategy({
 }: {
   open: boolean;
   setOpen: (value: boolean) => void;
-  strategySelected: any;
+  strategySelected: Strategy;
 }) {
   const [formData, setFormData] = useState({
     quantityGrids: "0",
@@ -23,11 +24,14 @@ export function ShowStrategy({
 
   useEffect(() => {
     if (strategySelected) {
+
+      const configStrategy = strategySelected.configStrategy ? JSON.parse(strategySelected.configStrategy) : null;
+
       setFormData({
-        quantityGrids: String(strategySelected.config?.quantityGrids ?? "0"),
-        valueOrder: String(strategySelected.config?.valueOrder ?? "0"),
-        profitTarget: String(strategySelected.config?.profitTarget ?? "0"),
-        variableOrder: String(strategySelected.config?.variableOrder ?? "0"),
+        quantityGrids: configStrategy?.quantityGrids ?? "0",
+        valueOrder: configStrategy?.valueOrder ?? "0",
+        profitTarget: configStrategy?.profitTarget ?? "0",
+        variableOrder: configStrategy?.variableOrder ?? "0"
       });
     }
   }, [strategySelected]);

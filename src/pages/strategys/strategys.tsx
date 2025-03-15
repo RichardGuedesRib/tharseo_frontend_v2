@@ -4,6 +4,8 @@ import { Label } from "@radix-ui/react-label";
 import { Search } from "lucide-react";
 import AddStrategyModal from "@/components/modals/add-strategy";
 import StrategysTable from "@/components/tables/strategy-tables";
+import useStrategyStore from "../../store/useStrategyStore";
+
 
 
 /**
@@ -23,6 +25,7 @@ import StrategysTable from "@/components/tables/strategy-tables";
  */
 const Strategys = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { strategies, setStrategies } = useStrategyStore();
 
   return (
     <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">
@@ -31,7 +34,7 @@ const Strategys = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center p-4 text-white gap-4 sm:gap-0">
           <div className="flex items-center gap-2">
             <Label className="font-semibold text-2xl">Estratégias</Label>
-            <Badge variant="secondary">2 Estratégias</Badge>
+            <Badge variant="secondary">{strategies.length} Estratégias</Badge>
           </div>
 
           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-between sm:justify-end items-center">
@@ -55,7 +58,7 @@ const Strategys = () => {
         </div>
       </div>
       {/* Fim Título e Filtros */}
-      <StrategysTable />
+      <StrategysTable strategies={strategies} />
     </div>
   );
 };

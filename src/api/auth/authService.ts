@@ -1,5 +1,6 @@
 import { UserRegister } from "@/models/User";
 import { SignIn } from "@/models/SignIn";
+import { useAuthStore } from '../../store/useAuthStore';
 
 export const authService = {
     
@@ -62,7 +63,7 @@ export const authService = {
         console.error("Erro ao efetuar login:", error);
         throw error; 
       }
-    }
+    },
 
   }
   

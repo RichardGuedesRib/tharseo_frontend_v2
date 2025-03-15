@@ -33,7 +33,6 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-"use client";
 
 import {
   SquarePen,
@@ -44,8 +43,13 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ShowStrategy } from "@/pages/strategys/show-strategy";
+import { Strategy } from "@/models/Strategy";
 
-export default function StrategysTable() {
+interface StrategysTableProps {
+  strategies: Strategy[];
+}
+
+export default function StrategysTable({ strategies }: StrategysTableProps) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
       []
@@ -58,50 +62,15 @@ export default function StrategysTable() {
     const [openStrategy, setOpenStrategy] = useState(false);
     const [strategySelected, setStrategySelected] = useState<any>();
   
-  
-    const mockStrategy = [
-      {
-        id: "1",
-        userId: "Richard Guedes",
-        name: "Grid dos 10%",
-        description: "Descricao das estrategia do grid dos 10%",
-        performance: 4589,
-        profit: 11789,
-        isActive: true,
-        config: {
-          quantityGrids: "10",
-          valueOrder: "10",
-          variableOrder: "1.50",
-          profitTarget: "1.50",
-          
-        }
-      },
-      {
-        id: "2",
-        userId: "João Guedes",
-        name: "Grid dos 20%",
-        description: "Descricao das estrategia do grid dos 20%",
-        performance: 9889,
-        profit: 19789,
-        isActive: true,
-        config: {
-          quantityGrids: 10,
-          valueOrder: 10,
-          variableOrder: 1.2,
-          profitTarget: 1.5,
-          
-        }
-      },
     
-    ];
   
     useEffect(() => {
       setDataLoading(true);
-      setData(mockStrategy);
+      setData(strategies);
+      console.log("stretegies na table", strategies);
       setDataLoading(false);
     }, []);
   
-    //Colunas e Estrutura da Datatable - Ainda faltam rotas e store pra controle de estado
     const columns: ColumnDef<any>[] = [
       {
         accessorKey: "isActive",
@@ -165,25 +134,7 @@ export default function StrategysTable() {
           <div className="capitalize text-center">{row.getValue("description")}</div>
         ),
       },
-  
-      {
-        accessorKey: "userId",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              className="w-full justify-center text-center hover:bg-bg-principal hover:text-blue-600"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              AUTOR
-              <ArrowUpDown />
-            </Button>
-          );
-        },
-        cell: ({ row }) => (
-          <div className="capitalize text-center">{row.getValue("userId")}</div>
-        ),
-      },
+      
       {
         accessorKey: "performance",
         header: ({ column }) => {
@@ -199,7 +150,7 @@ export default function StrategysTable() {
           );
         },
         cell: ({ row }) => (
-          <div className="lowercase text-center">{row.getValue("performance")}</div>
+          <div className="lowercase text-center">{`${row.original.performance ?? '0'} %`}</div>
         ),
       },
       {
@@ -217,7 +168,7 @@ export default function StrategysTable() {
           );
         },
         cell: ({ row }) => (
-          <div className="lowercase text-center">{row.getValue("profit")}</div>
+          <div className="lowercase text-center">{`$ ${row.original.profit ?? '0,00'}`}</div>
         ),
       },
     
@@ -236,7 +187,7 @@ export default function StrategysTable() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem className="cursor-pointer" onClick={() => {setStrategySelected(row.original); setOpenStrategy(true)}}>
                     <SquarePen className="h-4 w-4 mr-2" />
-                    Opções aqui
+                    Configurar Grid
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
