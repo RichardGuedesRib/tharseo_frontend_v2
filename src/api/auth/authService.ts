@@ -1,6 +1,5 @@
 import { UserRegister } from "@/models/User";
 import { SignIn } from "@/models/SignIn";
-import { useAuthStore } from '../../store/useAuthStore';
 
 export const authService = {
     

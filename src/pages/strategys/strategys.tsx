@@ -25,7 +25,7 @@ import useStrategyStore from "../../store/useStrategyStore";
  */
 const Strategys = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { strategies, setStrategies } = useStrategyStore();
+  const { strategies } = useStrategyStore();
 
   return (
     <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">

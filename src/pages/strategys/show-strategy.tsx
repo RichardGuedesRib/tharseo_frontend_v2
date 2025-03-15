@@ -1,9 +1,18 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Strategy } from "@/models/Strategy";
+import { updateStrategyUser } from "../../api/strategy/strategyService";
+import { toast } from "sonner";
 
 export function ShowStrategy({
   open,
@@ -24,32 +33,64 @@ export function ShowStrategy({
 
   useEffect(() => {
     if (strategySelected) {
-
-      const configStrategy = strategySelected.configStrategy ? JSON.parse(strategySelected.configStrategy) : null;
+      const configStrategy = strategySelected.configStrategy
+        ? JSON.parse(strategySelected.configStrategy)
+        : null;
 
       setFormData({
         quantityGrids: configStrategy?.quantityGrids ?? "0",
         valueOrder: configStrategy?.valueOrder ?? "0",
         profitTarget: configStrategy?.profitTarget ?? "0",
-        variableOrder: configStrategy?.variableOrder ?? "0"
+        variableOrder: configStrategy?.variableOrder ?? "0",
       });
     }
   }, [strategySelected]);
 
+  /**
+   * Atualiza o estado `formData` com o valor do input
+   * alterado.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e
+   * O evento de altera o do input.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
+  /**
+   * Salva as altera es feitas na estratégia no banco de dados.
+   *
+   * Executa a chamada para a API de update de estratégias e, caso
+   * a chamada seja bem sucedida, fecha o modal e atualiza o estado
+   * de edição. Caso contrário, exibe um erro.
+   */
+  const handleSave = async () => {
     const savedData = {
-      quantityGrids: Number(formData.quantityGrids),
-      valueOrder: Number(formData.valueOrder),
-      profitTarget: Number(formData.profitTarget),
-      variableOrder: Number(formData.variableOrder),
+      quantityGrids: String(formData.quantityGrids),
+      valueOrder: String(formData.valueOrder),
+      profitTarget: String(formData.profitTarget),
+      variableOrder: String(formData.variableOrder),
     };
-    console.log("Salvando dados:", savedData);
-    setIsEditing(false);
+
+    const configString = JSON.stringify(savedData);
+    strategySelected.configStrategy = configString;
+
+    const updatedStrategy = await updateStrategyUser(strategySelected);
+    if (updatedStrategy.success) {
+      toast.success("Estratégia atualizada com sucesso!", {
+        duration: 5000,
+        position: "top-right",
+      });
+
+      setIsEditing(false);
+      setOpen(false);
+    } else {
+      toast.error("Erro ao atualizar estratégia", {
+        duration: 5000,
+        position: "top-right",
+      });
+    }
   };
 
   return (
@@ -57,7 +98,9 @@ export function ShowStrategy({
       <DialogContent className="w-full bg-bg-principal text-white">
         <DialogHeader>
           <DialogTitle>{strategySelected?.name ?? "Estratégia"}</DialogTitle>
-          <DialogDescription>{strategySelected?.description ?? ""}</DialogDescription>
+          <DialogDescription>
+            {strategySelected?.description ?? ""}
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
