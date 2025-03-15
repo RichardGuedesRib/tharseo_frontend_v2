@@ -1,13 +1,18 @@
 import { CardAssetAllocation } from "./card-asset-allocation";
+import { Wallet } from "../models/Wallet";
 
-export function ChainAllocation() {
+interface ChainAllocationProps {
+  wallets: Wallet[];
+}
+
+export function ChainAllocation({ wallets }: ChainAllocationProps) {
   return (
-    <div className="flex flex-col items-center ">
-      <CardAssetAllocation />
-      <CardAssetAllocation />
-      <CardAssetAllocation />
-      <CardAssetAllocation />
-      <CardAssetAllocation />
+    <div className="flex flex-col items-center">
+      {wallets.map((wallet) => (
+        <div key={wallet.id}>
+          <CardAssetAllocation wallet={wallet} />
+        </div>
+      ))}
     </div>
   );
 }

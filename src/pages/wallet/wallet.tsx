@@ -42,6 +42,8 @@ import {
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import useWalletStore from "../../store/useWalletStore";
+
 
 
 export default function Wallets() {
@@ -53,50 +55,14 @@ export default function Wallets() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = useState<any[]>([]);
-
   const [dataLoading, setDataLoading] = useState<boolean>(true);
+  const { wallets } = useWalletStore();
 
-  const mockWallets = [
-    {
-      id: "1",
-      assetId: "BTC",
-      quantity: "0.5",
-      isFavorite: true,
-      isActive: true,
-    },
-    {
-      id: "2",
-      assetId: "ETH",
-      quantity: "1.2",
-      isFavorite: false,
-      isActive: true,
-    },
-    {
-      id: "3",
-      assetId: "SOL",
-      quantity: "10",
-      isFavorite: true,
-      isActive: false,
-    },
-    {
-      id: "4",
-      assetId: "XRP",
-      quantity: "1000",
-      isFavorite: false,
-      isActive: true,
-    },
-    {
-      id: "5",
-      assetId: "ADA",
-      quantity: "500",
-      isFavorite: true,
-      isActive: true,
-    },
-  ];
-
+ 
   useEffect(() => {
     setDataLoading(true);
-    setData(mockWallets);
+    setData(wallets);
+    console.log("wallets", wallets);	
     setDataLoading(false);
   }, []);
 
@@ -160,7 +126,7 @@ export default function Wallets() {
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("assetId")}</div>
+        <div className="capitalize text-center">{row.original.asset && row.original.asset.name }</div>
       ),
     },
     {

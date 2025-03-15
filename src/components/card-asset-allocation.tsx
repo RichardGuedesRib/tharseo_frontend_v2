@@ -8,8 +8,13 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Bitcoin,  ExternalLink } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
+import { Wallet } from "@/models/Wallet";
 
-export function CardAssetAllocation() {
+interface CardAssetAllocationProps {
+  wallet: Wallet;
+}
+
+export function CardAssetAllocation({ wallet }: CardAssetAllocationProps) {
   return (
     <>
       <Card className="text-white max-w-sm mx-auto shadow-none border-none bg-transparent">
@@ -19,8 +24,8 @@ export function CardAssetAllocation() {
           </div>
           <div className="flex flex-col justify-between  w-full">
             <div className="flex flex-row align-center items-center justify-between w-full ">
-              <CardTitle>Bitcoinnn</CardTitle>
-              <CardDescription className="text-white">$ 23,3B</CardDescription>
+              <CardTitle>{wallet && wallet.asset.name}</CardTitle>
+              <CardDescription className="text-white">{wallet && wallet.asset.symbol}</CardDescription>
             </div>
             <div className="flex flex-row align-center items-center justify-between mt-2">
               <CardDescription>

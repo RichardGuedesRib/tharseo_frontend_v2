@@ -1,4 +1,5 @@
 import {create} from 'zustand';
+import { persist } from "zustand/middleware";
 
 interface Asset {
   id: string;
@@ -22,9 +23,16 @@ interface WalletStore {
   setWallets: (wallets: Wallet[]) => void;
 }
 
-const useWalletStore = create<WalletStore>((set : any) => ({
-  wallets: [],
-  setWallets: (wallets: Wallet[]) => set({ wallets }),
-}));
+const useWalletStore = create<WalletStore>()(
+    persist(
+      (set) => ({
+        wallets: [],
+        setWallets: (wallets: Wallet[]) => set({ wallets }),
+      }),
+      {
+        name: "wallet-storage", 
+      }
+    )
+  );
 
 export default useWalletStore;
