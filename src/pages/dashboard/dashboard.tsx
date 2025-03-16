@@ -5,6 +5,7 @@ import {getWalletsUser} from "../../api/wallet/walletService";
 import useWalletStore from "../../store/useWalletStore";
 import { getStrategiesUser } from "../../api/strategy/strategyService";
 import { getTradeflowUser } from "../../api/tradeflow/tradeflowService";
+import { getAssets } from "@/api/asset/assetService";
 
 const Dashboard = () => {
 
@@ -18,6 +19,7 @@ const Dashboard = () => {
       const walletsData = await getWalletsUser();
       await getStrategiesUser(); 
       await getTradeflowUser();
+      await getAssets();
       setWallets(walletsData);
       setIsLoading(false); 
     } catch (error) {
