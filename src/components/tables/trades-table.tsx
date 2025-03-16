@@ -21,6 +21,7 @@ import {
   Bot,
   ToggleRight,
   ToggleLeft,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,8 +41,15 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tradeflow } from "@/models/Tradeflow";
+import {deleteTradeflowUser, getTradeflowUser, updatetradeflowUser} from "@/api/tradeflow/tradeflowService";
+import { toast } from "sonner";
 
-export default function TradesTable() {
+interface TradeflowsTableProps {
+  tradeflows: Tradeflow[];
+}
+
+export default function TradesTable({ tradeflows }: TradeflowsTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -52,94 +60,75 @@ export default function TradesTable() {
   const [data, setData] = useState<any[]>([]);
   const [dataLoading, setDataLoading] = useState<boolean>(true);
 
-  const mockStrategy = [
-    {
-      id: "1",
-      userId: "Richard Guedes",
-      name: "Grid dos 10%",
-      description: "Descricao das estrategia do grid dos 10%",
-      performance: 4589,
-      profit: 11789,
-      isActive: true,
-      config: {
-        quantityGrids: "10",
-        valueOrder: "10",
-        variableOrder: "1.50",
-        profitTarget: "1.50",
-      },
-      asset: {
-        name: "Binance Coin",
-        symbol: "BNBUSDT",
-      },
-    },
-    {
-      id: "2",
-      userId: "João Guedes",
-      name: "Grid dos 20%",
-      description: "Descricao das estrategia do grid dos 20%",
-      performance: 9889,
-      profit: 19789,
-      isActive: false,
-      config: {
-        quantityGrids: 10,
-        valueOrder: 10,
-        variableOrder: 1.2,
-        profitTarget: 1.5,
-      },
-      asset: {
-        name: "Bitcoin",
-        symbol: "BTCUSDT",
-      },
-    },
-    {
-        id: "2",
-        userId: "Du Guedes",
-        name: "Grid dos 20%",
-        description: "Descricao das estrategia do grid dos 20%",
-        performance: 9889,
-        profit: 19789,
-        isActive: false,
-        config: {
-          quantityGrids: 10,
-          valueOrder: 10,
-          variableOrder: 1.2,
-          profitTarget: 1.5,
-        },
-        asset: {
-          name: "Bitcoin",
-          symbol: "BTCUSDT",
-        },
-      },
-      {
-        id: "2",
-        userId: "Outro Guedes",
-        name: "Grid dos 20%",
-        description: "Descricao das estrategia do grid dos 20%",
-        performance: 9889,
-        profit: 19789,
-        isActive: false,
-        config: {
-          quantityGrids: 10,
-          valueOrder: 10,
-          variableOrder: 1.2,
-          profitTarget: 1.5,
-        },
-        asset: {
-          name: "Bitcoin",
-          symbol: "BTCUSDT",
-        },
-      },
-  ];
 
-  const handleActiveAutomator = (id : string) => {console.log("Ativou o trade: ", id)};
+
 
   useEffect(() => {
     setDataLoading(true);
-    setData(mockStrategy);
+    setData(tradeflows);
     setDataLoading(false);
+    console.log("tradeflows: ", tradeflows);
   }, []);
 
-  //Colunas e Estrutura da Datatable - Ainda faltam rotas e store pra controle de estado
+
+  /**
+   * Fun o que alterna o estado de uma automa o.
+   * @param {Tradeflow} tradeflow - A tradeflow a ser atualizada.
+   * 
+   * @returns {Promise<void>}
+   */
+
+
+  const handleToggleActiveAutomator = async (tradeflow: Tradeflow) => {
+    const tradeflowData: Omit<Tradeflow, "asset" | "strategy"> = {
+      id: tradeflow.id,
+      assetId: tradeflow.assetId,
+      strategyId: tradeflow.strategyId,
+      isActive: !tradeflow.isActive,
+      createdAt: tradeflow.createdAt,
+    };
+  
+    const updatedTrade = await updatetradeflowUser(tradeflowData);
+  
+    if (updatedTrade.success) {
+
+      setData((prevData) =>
+        prevData.map((t) =>
+          t.id === tradeflow.id ? { ...t, isActive: !t.isActive } : t
+        )
+      );
+
+      toast.success("Automação atualizada com sucesso!", {
+        duration: 5000,
+        position: "top-right",
+      });
+    } else {
+      toast.error("Erro ao atualizar automação", {
+        duration: 5000,
+        position: "top-right",
+      })
+    }
+  
+  };
+
+  /**
+   * Funcao para excluir uma tradeflow do usu rio.
+   *  
+   * @param id - O ID da tradeflow a ser excluida.
+   */
+
+  const handleDeleteTradeflow = async (id: string) => {
+    const deleteTradeflow = await deleteTradeflowUser(id);
+    if(deleteTradeflow.success){
+      toast.success("Tradeflow excluido com sucesso!", {
+        duration: 5000,
+        position: "top-right",        
+      });
+      await getTradeflowUser();
+      window.location.reload();
+    }
+    
+  }
   const columns: ColumnDef<any>[] = [
     {
       id: "icon",
@@ -167,30 +156,24 @@ export default function TradesTable() {
         );
       },
       cell: ({ row }) => {
+        const configStrategy = row.original.strategy && row.original.strategy.configStrategy ? JSON.parse(row.original.strategy.configStrategy) : null;
+
         const quantityGrids =
-          (row.original &&
-            row.original.config &&
-            row.original.config.quantityGrids) ??
+          (configStrategy && configStrategy.quantityGrids) ??
           0;
         const valueOrder =
-          (row.original &&
-            row.original.config &&
-            row.original.config.valueOrder) ??
+          (configStrategy && configStrategy.valueOrder) ??
           0;
         const variableOrder =
-          (row.original &&
-            row.original.config &&
-            row.original.config.variableOrder) ??
+          (configStrategy && configStrategy.variableOrder) ??
           0;
         const profitTarget =
-          (row.original &&
-            row.original.config &&
-            row.original.config.profitTarget) ??
+          (configStrategy && configStrategy.profitTarget) ??
           0;
         return (
           <div className="flex flex-col">
             <div className="flex justify-start items-center font-semibold text-base">
-              {row.getValue("name")}
+              {row.original.strategy.name}
             </div>
             <div className="flex justify-start items-center text-xs">{`GRIDS: ${quantityGrids} | VALOR: ${valueOrder} | VARIAÇÃO: ${variableOrder} | ALVO: ${profitTarget}`}</div>
           </div>
@@ -246,29 +229,29 @@ export default function TradesTable() {
       },
       cell: ({ row }) => (
         <div className="capitalize text-center">
-          {row.getValue("description")}
+          {(row.original.strategy && row.original.strategy.description) ?? ""}
         </div>
       ),
     },
 
-    {
-      accessorKey: "userId",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            className="w-full justify-center text-center hover:bg-bg-principal hover:text-blue-600"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            AUTOR
-            <ArrowUpDown />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("userId")}</div>
-      ),
-    },
+    // {
+    //   accessorKey: "userId",
+    //   header: ({ column }) => {
+    //     return (
+    //       <Button
+    //         variant="ghost"
+    //         className="w-full justify-center text-center hover:bg-bg-principal hover:text-blue-600"
+    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //       >
+    //         AUTOR
+    //         <ArrowUpDown />
+    //       </Button>
+    //     );
+    //   },
+    //   cell: ({ row }) => (
+    //     <div className="capitalize text-center">{row.getValue("userId")}</div>
+    //   ),
+    // },
     {
         accessorKey: "status",
         header: ({ column }) => {
@@ -285,8 +268,8 @@ export default function TradesTable() {
         },
         cell: ({ row }) => {
           return (
-            <div className="flex justify-center items-center rounded-sm hover:cursor-pointer">
-             <span>{row.original.isActive == true ? <ToggleRight className="text-green-400" size={40} onClick={() => {handleActiveAutomator(row.original.id)}}/> : <ToggleLeft className="text-red-400" size={40} onClick={() => {handleActiveAutomator(row.original.id)}}/>}</span>
+            <div className="flex justify-center items-center rounded-sm">
+             <span>{row.original.isActive == true ? <ToggleRight className="text-green-400" size={40}/> : <ToggleLeft className="text-red-400" size={40} />}</span>
             </div>
           );
         },
@@ -297,7 +280,7 @@ export default function TradesTable() {
     {
       id: "actions",
       enableHiding: false,
-      cell: ({}) => {
+      cell: ({row}) => {
         return (
           <div className="w-full flex justify-center">
             <DropdownMenu>
@@ -307,9 +290,13 @@ export default function TradesTable() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem className="cursor-pointer">
+                <DropdownMenuItem className="cursor-pointer text-red-600" onClick={() => {handleDeleteTradeflow(row.original)}}>
+                  <Trash2 className="h-4 w-4 mr-2 text-red-600" />
+                  Excluir Automação
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => {handleToggleActiveAutomator(row.original)}} >
                   <SquarePen className="h-4 w-4 mr-2" />
-                  Opções aqui
+                  {row.original.isActive == true ? "Desativar Automação" : "Ativar Automação"}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 
 import { Label } from "@radix-ui/react-label";
@@ -12,15 +12,28 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import useTradeflowStore from "@/store/useTradeflowStore";
+import { getTradeflowUser } from "@/api/tradeflow/tradeflowService";
 
 const Trades = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Todos");
+  const { tradeflows } = useTradeflowStore();
+
+  const updateTradeflowsData = async () => {
+    await getTradeflowUser();
+  };
+
+  useEffect(() => {
+     updateTradeflowsData();
+  }, []);
 
   const filters = [
     { label: "Ativas", value: "ativos" },
     { label: "Inativas", value: "inativos" },
   ];
+
+  console.log("Tradeflows", tradeflows);
 
   return (
     <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">
@@ -31,7 +44,7 @@ const Trades = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center p-4 text-white gap-4 sm:gap-0">
           <div className="flex items-center gap-2">
             <Label className="font-semibold text-2xl">Minhas Automações</Label>
-            <Badge variant="secondary">7 Automações</Badge>
+            <Badge variant="secondary">{tradeflows.length} Automações</Badge>
           </div>
 
           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-between sm:justify-end items-center">
@@ -72,7 +85,7 @@ const Trades = () => {
         </div>
       </div>
       {/* Fim Título e Filtros */}
-      <TradesTable /> 
+      <TradesTable tradeflows={tradeflows} /> 
      
     </div>
   );

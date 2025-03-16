@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {getWalletsUser} from "../../api/wallet/walletService";
 import useWalletStore from "../../store/useWalletStore";
 import { getStrategiesUser } from "../../api/strategy/strategyService";
+import { getTradeflowUser } from "../../api/tradeflow/tradeflowService";
 
 const Dashboard = () => {
 
@@ -16,6 +17,7 @@ const Dashboard = () => {
     try {
       const walletsData = await getWalletsUser();
       await getStrategiesUser(); 
+      await getTradeflowUser();
       setWallets(walletsData);
       setIsLoading(false); 
     } catch (error) {
