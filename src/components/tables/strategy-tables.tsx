@@ -67,7 +67,6 @@ export default function StrategysTable({ strategies }: StrategysTableProps) {
     useEffect(() => {
       setDataLoading(true);
       setData(strategies);
-      console.log("stretegies na table", strategies);
       setDataLoading(false);
     }, []);
   

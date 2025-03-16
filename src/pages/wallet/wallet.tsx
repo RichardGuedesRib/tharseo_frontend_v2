@@ -62,7 +62,6 @@ export default function Wallets() {
   useEffect(() => {
     setDataLoading(true);
     setData(wallets);
-    console.log("wallets", wallets);	
     setDataLoading(false);
   }, []);
 

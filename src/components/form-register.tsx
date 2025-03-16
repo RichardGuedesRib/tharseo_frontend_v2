@@ -63,7 +63,6 @@ export function RegisterForm() {
     }
   }
  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const data = {
       name: values.name,
       lastName: values.lastName,

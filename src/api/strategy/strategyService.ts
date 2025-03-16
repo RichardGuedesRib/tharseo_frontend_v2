@@ -1,4 +1,5 @@
 import { useAuthStore } from "../../store/useAuthStore";
+import useStrategyStore from "../../store/useStrategyStore";
 
 /**
  * Busca as estrategias do usuario logado
@@ -7,9 +8,8 @@ import { useAuthStore } from "../../store/useAuthStore";
  * @throws Um erro caso n o seja poss vel efetuar a busca
  */
 export const getStrategiesUser = async () => {
-
   const token = useAuthStore.getState().token;
-
+  const { setStrategies } = useStrategyStore.getState();
   try {
     const response = await fetch(
       import.meta.env.VITE_API_URL + "/v1/strategy",
@@ -23,7 +23,8 @@ export const getStrategiesUser = async () => {
     );
 
     if (response.status === 200) {
-      return await response.json();
+      const data = await response.json();
+      setStrategies(data);
     } else {
       const errorData = await response.json();
       throw new Error(errorData.message || "Error while fetching strategies");
@@ -34,13 +35,19 @@ export const getStrategiesUser = async () => {
   }
 };
 
+/**
+ * Atualiza uma estrat gia do usu rio logado
+ *
+ * @param {any} data - Dados da estrat gia a ser atualizada
+ * @returns {Promise<any>} - Resposta da API com informa es da estrat gia atualizada
+ * @throws {Error} - Erro caso n o seja poss vel atualizar a estrat gia
+ */
 export const updateStrategyUser = async (data: any) => {
-
   const token = useAuthStore.getState().token;
-  
+
   try {
     const response = await fetch(
-      import.meta.env.VITE_API_URL + `/v1/strategy/${data.id}`,	
+      import.meta.env.VITE_API_URL + `/v1/strategy/${data.id}`,
       {
         method: "PATCH",
         headers: {
@@ -52,6 +59,7 @@ export const updateStrategyUser = async (data: any) => {
     );
 
     if (response.status === 200) {
+      await getStrategiesUser();
       return {
         success: true,
         message: "Strategy updated successfully",
@@ -65,4 +73,43 @@ export const updateStrategyUser = async (data: any) => {
     console.error("Error while updating strategy:", error);
     throw error;
   }
-}
+};
+
+/**
+ * Cria uma nova estrat gia para o usu rio logado
+ *
+ * @param {any} data - Dados da estrat gia a ser criada
+ * @returns {Promise<any>} - Resposta da API com informa es da estrat gia criada
+ * @throws {Error} - Erro caso n o seja poss vel criar a estrat gia
+ */
+export const createStrategyUser = async (data: any) => {
+  const token = useAuthStore.getState().token;
+  try {
+    const response = await fetch(
+      import.meta.env.VITE_API_URL + `/v1/strategy`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (response.status === 201) {
+      await getStrategiesUser();
+      return {
+        success: true,
+        message: "Strategy created successfully",
+        data: await response.json(),
+      };
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error while created strategy");
+    }
+  } catch (error) {
+    console.error("Error while created strategy:", error);
+    throw error;
+  }
+};

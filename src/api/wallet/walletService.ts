@@ -4,8 +4,6 @@ export const getWalletsUser = async () => {
 
   const token = useAuthStore.getState().token;
 
-  console.log("troken do service", token);
-
   try {
     const response = await fetch(
       import.meta.env.VITE_API_URL + "/wallet",
@@ -18,7 +16,6 @@ export const getWalletsUser = async () => {
       }
     );
 
-    console.log("request", response);
     if (response.status === 200) {
       return await response.json();
     } else {

@@ -3,25 +3,21 @@ import {PortfolioPerformance} from "@/components/portifolio-performance";
 import { useEffect, useState } from "react";
 import {getWalletsUser} from "../../api/wallet/walletService";
 import useWalletStore from "../../store/useWalletStore";
-import useStrategyStore from "../../store/useStrategyStore";
 import { getStrategiesUser } from "../../api/strategy/strategyService";
 
 const Dashboard = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const { wallets, setWallets } = useWalletStore();
-  const { setStrategies } = useStrategyStore();
 
   const fetchDataUser = async () => {
+    console.log(isLoading);
     setIsLoading(true);
     try {
-      console.log("isLoading", isLoading);
       const walletsData = await getWalletsUser();
-      const strategiesData = await getStrategiesUser(); 
+      await getStrategiesUser(); 
       setWallets(walletsData);
-      setStrategies(strategiesData);
       setIsLoading(false); 
-      console.log("Estrategias", strategiesData);
     } catch (error) {
       console.error("Erro ao buscar carteiras:", error);
     }

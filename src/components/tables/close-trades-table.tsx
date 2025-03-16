@@ -109,7 +109,6 @@ export default function CloseTradesTable() {
         );
       },
       cell: ({ row }) => {
-        console.log("row", row);
               return (
             <div className="flex items-center justify-center font-semibold text-base gap-2 text-xs">
               {row.original.side === "BUY" ? <ChartLine className="text-green-500"/> : <ChartLine className="text-red-500"/>}
@@ -133,7 +132,6 @@ export default function CloseTradesTable() {
         );
       },
       cell: ({ row }) => {
-        console.log("row", row);
         return (
           <div className="flex flex-col">
             <div className="flex justify-center items-center font-semibold text-base text-xs text-center">

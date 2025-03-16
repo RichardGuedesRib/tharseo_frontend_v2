@@ -46,7 +46,6 @@ export default function AddAutomatorModal() {
   const [selectedStrategy, setSelectedStrategy] = useState("Selecione a Estratégia");
 
   function onClick() {
-   console.log("Clicou selecionando:" + selectedAsset + " e " + selectedStrategy);
   }
 
   return (

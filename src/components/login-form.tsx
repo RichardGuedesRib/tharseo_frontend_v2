@@ -47,8 +47,6 @@ export function LoginForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
 
-    console.log("Entrou no onsubmit");
-
     const data = {
       email: values.email,
       password: values.password
@@ -56,7 +54,6 @@ export function LoginForm({
 
     try {
       const login = await authService.signIn(data);
-      console.log("login", login);
       useAuthStore.getState().setAuth({
         user: login.user,
         token: login.token,

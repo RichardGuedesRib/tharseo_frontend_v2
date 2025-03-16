@@ -167,7 +167,6 @@ export default function TradesTable() {
         );
       },
       cell: ({ row }) => {
-        console.log("row", row);
         const quantityGrids =
           (row.original &&
             row.original.config &&
