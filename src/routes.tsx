@@ -14,6 +14,7 @@ import FastGuide from "./pages/trades/fast-guide";
 import BackTesting from "./pages/trades/backtesting";
 import Support from "./pages/support/support";
 import Feedback from "./pages/feedback/feedback";
+import Profile from "./pages/user/profile";
 
 const AppRoutes = () => {
   return (
@@ -35,6 +36,7 @@ const AppRoutes = () => {
             <Route path="backtesting" element={<BackTesting/>} />
             <Route path="support" element={<Support/>} />
             <Route path="feedback" element={<Feedback/>} />
+            <Route path="profile" element={<Profile/>} />
             
 
           </Route>
