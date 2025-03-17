@@ -10,6 +10,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import OpenTradesTable from "@/components/tables/open-trades-table";
 import AddOrderModal from "@/components/modals/add-order";
+import { getOrderUser } from "@/api/order/orderService";
+import { useEffect } from "react";
+import useOrderStore from "@/store/useOrderStore";
 
   /**
    * Pagina de trades em andamento, contendo um título e filtros,
@@ -44,6 +47,21 @@ const OpenTrades = () => {
     { label: "Inativos", value: "inativos" },
   ];
 
+  const { orders } = useOrderStore();
+
+    const updateOrdersData = async () => {
+      await getOrderUser();
+    };
+  
+    useEffect(() => {
+      updateOrdersData();
+    }, []);
+
+    const filteredOrders = orders?.filter(order => 
+      order.status !== "CANCELADO" && order.status !== "FINALIZADO"
+    );
+  
+
   return (
     <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">
 
@@ -52,7 +70,7 @@ const OpenTrades = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center p-4 text-white gap-4 sm:gap-0">
           <div className="flex items-center gap-2">
             <Label className="font-semibold text-2xl">Trades em Andamento</Label>
-            <Badge variant="secondary">16 Trades</Badge>
+            <Badge variant="secondary">{filteredOrders?.length} Trades</Badge>
           </div>
 
           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-between sm:justify-end items-center">
@@ -93,7 +111,7 @@ const OpenTrades = () => {
         </div>
       </div>
       {/* Fim Título e Filtros */}
-      <OpenTradesTable /> 
+      <OpenTradesTable openorders={filteredOrders}/> 
      
     </div>
   );
