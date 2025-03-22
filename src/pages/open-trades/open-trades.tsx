@@ -58,7 +58,7 @@ const OpenTrades = () => {
     }, []);
 
     const filteredOrders = orders?.filter(order => 
-      order.status !== "CANCELADO" && order.status !== "FINALIZADO"
+      order.status !== "CANCELADO" && order.status !== "FINALIZADO" && order.status !== "EXECUTADA"
     );
   
 

@@ -58,7 +58,6 @@ export default function OpenTradesTable({ openorders }: OpenTradesTableProps) {
 
 
   useEffect(() => {
-    console.log("ORders", openorders);
     setDataLoading(true);
     setData(openorders);
     setDataLoading(false);
