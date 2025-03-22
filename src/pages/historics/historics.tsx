@@ -9,6 +9,9 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import CloseTradesTable from "@/components/tables/close-trades-table";
+import useOrderStore from "@/store/useOrderStore";
+import { getOrderUser } from "@/api/order/orderService";
+import { useEffect } from "react";
 
 /**
  * Componente que exibe o histórico de trades.
@@ -23,11 +26,24 @@ import CloseTradesTable from "@/components/tables/close-trades-table";
 const HistoricTrade = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Todos");
-
+  const { orders } = useOrderStore();
   const filters = [
     { label: "Canceled", value: "canceled" },
     { label: "Close", value: "close" },
   ];
+
+    const updateOrdersData = async () => {
+        await getOrderUser();
+      };
+    
+      useEffect(() => {
+        updateOrdersData();
+      }, []);
+
+      const filteredOrders = orders?.filter(order => 
+        ["CANCELADO", "FINALIZADO", "EXECUTADA"].includes(order.status)
+      );
+
 
   return (
     <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">
@@ -37,7 +53,7 @@ const HistoricTrade = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center p-4 text-white gap-4 sm:gap-0">
           <div className="flex items-center gap-2">
             <Label className="font-semibold text-2xl">Hitórico de Trades</Label>
-            <Badge variant="secondary">21 Trades</Badge>
+            <Badge variant="secondary">{filteredOrders?.length}</Badge>
           </div>
 
           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-between sm:justify-end items-center">
@@ -74,7 +90,7 @@ const HistoricTrade = () => {
         </div>
       </div>
       {/* Fim Título e Filtros */}
-      <CloseTradesTable /> 
+      <CloseTradesTable historicorders={filteredOrders} /> 
      
     </div>
   );

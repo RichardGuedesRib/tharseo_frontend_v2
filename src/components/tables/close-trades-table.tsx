@@ -17,6 +17,7 @@ import {
   ArrowUpDown,
   ChevronDown,
   ChartLine,
+  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,9 +36,15 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import ShowTradeModal from "../modals/show-trade-details";
+import { Order } from "@/models/Order";
+import { format } from "date-fns";
+import { toZonedTime } from 'date-fns-tz';
 
-export default function CloseTradesTable() {
+interface HistoricTradesTableProps {
+  historicorders: Order[];
+}
+
+export default function CloseTradesTable({ historicorders }: HistoricTradesTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -48,51 +55,14 @@ export default function CloseTradesTable() {
   const [data, setData] = useState<any[]>([]);
   const [dataLoading, setDataLoading] = useState<boolean>(true);
 
-  const mockOpenTrades = [
-    {
-      id: "1",
-      openDate: "01/01/2023 12:00:00",
-      quantity: "0.234",
-      side: "BUY",
-      typeOrder: "MARKET",
-      openPrice: "1.234",
-      closePrice: "1.454",
-      targetPrice: "1.454",
-      status: "CLOSE",
-      strategy: "Grid dos 10%",
-      result: "+32.54", 
-      asset: {
-        name: "Binance Coin",
-        symbol: "BNBUSDT",
-      }, 
-    },
-    {
-      id: "2",
-      openDate: "02/01/2023 12:00:00",
-      quantity: "0.234",
-      side: "SELL",
-      typeOrder: "LIMIT",
-      openPrice: "1.454",
-      closePrice: "1.454",
-      targetPrice: "1.454",
-      status: "CLOSE",
-      strategy: "Grid dos 10%",
-      result: "+32.54", 
-      asset: {
-        name: "Binance Coin",
-        symbol: "BNBUSDT",
-      },     
-    },
-    
-  ];
 
   useEffect(() => {
     setDataLoading(true);
-    setData(mockOpenTrades);
+    setData(historicorders);
     setDataLoading(false);
   }, []);
 
-  //Colunas e Estrutura da Datatable - Ainda faltam rotas e store pra controle de estado
+  
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: "side",
@@ -108,11 +78,12 @@ export default function CloseTradesTable() {
           </Button>
         );
       },
-      cell: ({ row }) => {
+      cell: ({row  }) => {
               return (
             <div className="flex items-center justify-center font-semibold text-base gap-2 text-xs">
-              {row.original.side === "BUY" ? <ChartLine className="text-green-500"/> : <ChartLine className="text-red-500"/>}
-              {row.original.side}
+               {row.original.side === "BUY" ? <ChartLine className="text-green-500"/> : <ChartLine className="text-red-500"/>}
+              {row.original.side} 
+              
             </div>
         );
       },
@@ -135,7 +106,7 @@ export default function CloseTradesTable() {
         return (
           <div className="flex flex-col">
             <div className="flex justify-center items-center font-semibold text-base text-xs text-center">
-              {row.getValue("openDate")}
+            {format(toZonedTime(row.original.openDate, "America/Sao_Paulo"), "dd/MM/yyyy HH:mm")}
             </div>
           </div>
         );
@@ -190,7 +161,7 @@ export default function CloseTradesTable() {
       },
       cell: ({ row }) => (
         <div className="capitalize text-center">
-          {row.getValue("quantity")}
+          {row.original.quantity}
         </div>
       ),
     },
@@ -210,10 +181,46 @@ export default function CloseTradesTable() {
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("openPrice")}</div>
+        <div className="capitalize text-center">{row.original.openPrice}</div>
       ),
     },
-        {
+    {
+      accessorKey: "closePrice",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            className="w-full justify-center text-center hover:bg-bg-principal hover:text-blue-600"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            PREÇO FECHAMENTO
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="capitalize text-center">{row.original.closePrice}</div>
+      ),
+    },
+    {
+        accessorKey: "targetPrice",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              className="w-full justify-center text-center hover:bg-bg-principal hover:text-blue-600"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+              PREÇO ALVO
+              <ArrowUpDown />
+            </Button>
+          );
+        },
+        cell: ({ row }) => (
+          <div className="capitalize text-center">{row.original.targetPrice ?? "0"}</div>
+        ),
+      },
+      {
         accessorKey: "result",
         header: ({ column }) => {
           return (
@@ -228,7 +235,7 @@ export default function CloseTradesTable() {
           );
         },
         cell: ({ row }) => (
-          <div className="capitalize text-center">{row.getValue("result")}</div>
+          <div className="capitalize text-center">{row.original.result  ?? "0"}</div>
         ),
       },
       {
@@ -246,7 +253,7 @@ export default function CloseTradesTable() {
           );
         },
         cell: ({ }) => (
-          <div className="capitalize text-center">+45%</div>
+          <div className="capitalize text-center">0 %</div>
         ),
       },
       {
@@ -264,7 +271,7 @@ export default function CloseTradesTable() {
           );
         },
         cell: ({ row }) => (
-          <div className="capitalize text-center">{row.getValue("status")}</div>
+          <div className="capitalize text-center">{row.original.status}</div>
         ),
       },
       {
@@ -282,23 +289,10 @@ export default function CloseTradesTable() {
           );
         },
         cell: ({ row }) => (
-          <div className="capitalize text-center">{row.getValue("strategy")}</div>
+          <div className="capitalize text-center">{row.original.strategy ? row.original.strategy.name : "-"}</div>
         ),
       },
-    
-  
 
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({row}) => {
-        return (
-          <div className="w-full flex justify-center items-center cursor-pointer hover:scale-110 transition">
-        <ShowTradeModal orderId={row.original.id} />
-        </div>
-        );
-      },
-    },
   ];
 
   //Formação da Tabela
