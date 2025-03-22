@@ -17,7 +17,6 @@ import {
   ArrowUpDown,
   ChevronDown,
   ChartLine,
-  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
