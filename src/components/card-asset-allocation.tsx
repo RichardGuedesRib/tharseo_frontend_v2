@@ -8,13 +8,18 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { ExternalLink } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
-import { Wallet } from "@/models/Wallet";
+
+import { Wallet } from "../store/useWalletStore";
 
 interface CardAssetAllocationProps {
-  wallet: Wallet;
+  wallet: Wallet; 
+  total : number;
 }
 
-export function CardAssetAllocation({ wallet }: CardAssetAllocationProps) {
+export function CardAssetAllocation({ wallet, total }: CardAssetAllocationProps) {
+  console.log("wallet no comp", wallet)
+  const percent = parseFloat((total > 0 ? (wallet.totalValueUSD ?? 0) / total * 100 : 0).toFixed(2));
+
   return (
     <>
       <Card className="text-white max-w-sm mx-auto shadow-none border-none bg-transparent">
@@ -41,7 +46,7 @@ export function CardAssetAllocation({ wallet }: CardAssetAllocationProps) {
           </div>
         </CardHeader>
         <CardContent className="flex flex-row align-center justify-center items-center gap-3 p-1">
-          <Progress value={61.68} className="w-full" /> <Label>71.68%</Label>
+        <Progress value={percent} className="w-full" /> <Label>{percent.toFixed(2) + "%"}</Label>
         </CardContent>
       </Card>{" "}
     </>
