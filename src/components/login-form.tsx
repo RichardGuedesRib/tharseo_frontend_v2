@@ -89,7 +89,7 @@ export function LoginForm({
           
             <img src="/images/tharseo.png" alt="Tharseo" />
             <div className="text-center text-sm text-white ">
-             Não possui uma conta? Teste De Deploy {""}
+             Não possui uma conta? {""}
               <Link to="/signup">Inscreva-se</Link>
             </div>
           </div>

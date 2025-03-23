@@ -10,6 +10,8 @@ import { ExternalLink } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 
 import { Wallet } from "../store/useWalletStore";
+import usePortfolioStore from "@/store/usePortfolioStore";
+import { useChartStore } from "@/store/useChartStore";
 
 interface CardAssetAllocationProps {
   wallet: Wallet; 
@@ -19,6 +21,16 @@ interface CardAssetAllocationProps {
 export function CardAssetAllocation({ wallet, total }: CardAssetAllocationProps) {
   console.log("wallet no comp", wallet)
   const percent = parseFloat((total > 0 ? (wallet.totalValueUSD ?? 0) / total * 100 : 0).toFixed(2));
+
+  const {setAsset} = useChartStore();
+  const { setTotalValue, setTotalQuantity, setSymbol } = usePortfolioStore();
+
+  const handleLoadingInfo = async () => {
+    setAsset(wallet.asset.symbol);
+    setTotalValue(wallet.totalValueUSD!);
+    setTotalQuantity(Number(wallet.quantity!));
+    setSymbol(wallet.asset.symbol);
+  }
 
   return (
     <>
@@ -41,7 +53,7 @@ export function CardAssetAllocation({ wallet, total }: CardAssetAllocationProps)
               <CardDescription>
                 Deploy your new project in one-clickaa.
               </CardDescription>
-              <ExternalLink />
+              <ExternalLink className="hover:text-blue-600 hover:cursor-pointer" onClick={handleLoadingInfo}/>
             </div>
           </div>
         </CardHeader>
