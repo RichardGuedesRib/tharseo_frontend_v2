@@ -118,6 +118,7 @@ export default function TradesTable({ tradeflows }: TradeflowsTableProps) {
    */
 
   const handleDeleteTradeflow = async (id: string) => {
+    console.log("Id delete", id);
     const deleteTradeflow = await deleteTradeflowUser(id);
     if(deleteTradeflow.success){
       toast.success("Tradeflow excluido com sucesso!", {
@@ -233,25 +234,6 @@ export default function TradesTable({ tradeflows }: TradeflowsTableProps) {
         </div>
       ),
     },
-
-    // {
-    //   accessorKey: "userId",
-    //   header: ({ column }) => {
-    //     return (
-    //       <Button
-    //         variant="ghost"
-    //         className="w-full justify-center text-center hover:bg-bg-principal hover:text-blue-600"
-    //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //       >
-    //         AUTOR
-    //         <ArrowUpDown />
-    //       </Button>
-    //     );
-    //   },
-    //   cell: ({ row }) => (
-    //     <div className="capitalize text-center">{row.getValue("userId")}</div>
-    //   ),
-    // },
     {
         accessorKey: "status",
         header: ({ column }) => {
@@ -274,8 +256,6 @@ export default function TradesTable({ tradeflows }: TradeflowsTableProps) {
           );
         },
       },
-    
-  
 
     {
       id: "actions",
@@ -290,7 +270,7 @@ export default function TradesTable({ tradeflows }: TradeflowsTableProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem className="cursor-pointer text-red-600" onClick={() => {handleDeleteTradeflow(row.original)}}>
+                <DropdownMenuItem className="cursor-pointer text-red-600" onClick={() => {handleDeleteTradeflow(row.original.id)}}>
                   <Trash2 className="h-4 w-4 mr-2 text-red-600" />
                   Excluir Automação
                 </DropdownMenuItem>
