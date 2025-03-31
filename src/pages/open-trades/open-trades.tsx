@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@radix-ui/react-label";
-import { Search, ChevronDown } from "lucide-react";
+import { Search, ChevronDown, Cog, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +10,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import OpenTradesTable from "@/components/tables/open-trades-table";
 import AddOrderModal from "@/components/modals/add-order";
-import { getOrderUser } from "@/api/order/orderService";
+import { getOrderUser, cancelOpenOrders } from "@/api/order/orderService";
 import { useEffect } from "react";
 import useOrderStore from "@/store/useOrderStore";
+import { Button } from "@/components/ui/button";
+import { ConfirmDeleteOrders } from "@/components/dialogs/confirm-delete-orders";
+import { toast } from "sonner";
+
 
   /**
    * Pagina de trades em andamento, contendo um título e filtros,
@@ -40,6 +44,7 @@ import useOrderStore from "@/store/useOrderStore";
 const OpenTrades = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Todos");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filters = [
     { label: "Ativos", value: "ativos" },
@@ -60,6 +65,32 @@ const OpenTrades = () => {
     const filteredOrders = orders?.filter(order => 
       order.status !== "CANCELADO" && order.status !== "FINALIZADO" && order.status !== "EXECUTADA"
     );
+
+  /**
+   * Cancela todas as ordens abertas do usu rio.
+   *
+   * Faz uma chamada   API para deletar as ordens abertas. Em caso de sucesso, 
+   * atualiza o estado global das ordens com os dados retornados. Caso ocorra
+   * um erro, lan a uma exce o com a mensagem apropriada.
+   *
+   * Se a opera o for bem sucedida, um toast de sucesso   exibido e a p gina
+   *   recarregada ap s 1 segundo.
+   *
+   * Se a opera o falhar, um toast de erro   exibido.
+   */
+    const handleDelete = async () => {
+      const response = await cancelOpenOrders();
+      if(response && response.success){
+        await getOrderUser();
+        toast.success("Ordens canceladas com sucesso!", { duration: 5000, position: "top-right" });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        toast.error("Erro ao cancelar ordens!", { duration: 5000, position: "top-right" });
+      }
+      setIsDialogOpen(false);
+    };
   
 
   return (
@@ -71,6 +102,21 @@ const OpenTrades = () => {
           <div className="flex items-center gap-2">
             <Label className="font-semibold text-2xl">Trades em Andamento</Label>
             <Badge variant="secondary">{filteredOrders?.length} Trades</Badge>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size={'icon'} >
+                <Cog style={{ width: "20px", height: "20px" }} />
+
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem className="cursor-pointer text-red-600"  onClick={() => setIsDialogOpen(true)}>
+                  <Trash2 className="h-4 w-4 mr-2 text-red-600" />
+                  Excluir Ordens Abertas
+                </DropdownMenuItem>
+                
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-between sm:justify-end items-center">
@@ -112,6 +158,11 @@ const OpenTrades = () => {
       </div>
       {/* Fim Título e Filtros */}
       <OpenTradesTable openorders={filteredOrders}/> 
+      <ConfirmDeleteOrders
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        onConfirm={handleDelete}
+      />
      
     </div>
   );
