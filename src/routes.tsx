@@ -15,11 +15,13 @@ import BackTesting from "./pages/trades/backtesting";
 import Support from "./pages/support/support";
 import Feedback from "./pages/feedback/feedback";
 import Profile from "./pages/user/profile";
+import Home from "./pages/home/home";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
+      <Route path="/" element={<Home />} />
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Register />} />
 
@@ -37,8 +39,6 @@ const AppRoutes = () => {
             <Route path="support" element={<Support/>} />
             <Route path="feedback" element={<Feedback/>} />
             <Route path="profile" element={<Profile/>} />
-            
-
           </Route>
         </Route>
 
