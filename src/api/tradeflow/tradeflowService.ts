@@ -46,8 +46,9 @@ export const getTradeflowUser = async () => {
  * @returns {Promise<any>} - Resposta da API com informa es da tradeflow atualizada
  * @throws {Error} - Erro caso n o seja poss vel atualizar a tradeflow
  */
-export const updatetradeflowUser = async (data: Omit<Tradeflow, "asset" | "strategy">) => {
+export const updatetradeflowUser = async (data: Omit<Tradeflow, "asset" | "strategy" | "createdAt">) => {
   const token = useAuthStore.getState().token;
+  const { id, createdAt, ...dataWithoutIdAndCreatedAt } = data as any;
 
   try {
     const response = await fetch(
@@ -58,9 +59,10 @@ export const updatetradeflowUser = async (data: Omit<Tradeflow, "asset" | "strat
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(dataWithoutIdAndCreatedAt),
       }
     );
+
 
     if (response.status === 200) {
       await getTradeflowUser();

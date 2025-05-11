@@ -67,7 +67,6 @@ export default function TradesTable({ tradeflows }: TradeflowsTableProps) {
     setDataLoading(true);
     setData(tradeflows);
     setDataLoading(false);
-    console.log("tradeflows: ", tradeflows);
   }, []);
 
 
@@ -118,7 +117,6 @@ export default function TradesTable({ tradeflows }: TradeflowsTableProps) {
    */
 
   const handleDeleteTradeflow = async (id: string) => {
-    console.log("Id delete", id);
     const deleteTradeflow = await deleteTradeflowUser(id);
     if(deleteTradeflow.success){
       toast.success("Tradeflow excluido com sucesso!", {

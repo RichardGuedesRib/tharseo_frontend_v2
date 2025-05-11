@@ -6,7 +6,7 @@ export interface Tradeflow {
     assetId: string;
     strategyId: string;
     isActive : boolean;
-    createdAt: Date;
+    createdAt?: Date;
     strategy: Strategy;
     asset: Asset;  
 }

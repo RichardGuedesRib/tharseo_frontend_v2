@@ -13,7 +13,6 @@ export const getPriceAsset = async (symbol : string) => {
 
     if (response.status === 200) {
         const data = await response.json();
-        console.log("Retorno da binance", data);
      return data;
     } else {
       const errorData = await response.json();

@@ -19,7 +19,6 @@ total : number;
 }
 
 export function CardAssetAllocation({ wallet, total }: CardAssetAllocationProps) {
-console.log("wallet no comp", wallet)
 const percent = parseFloat((total > 0 ? (wallet.totalValueUSD ?? 0) / total * 100 : 0).toFixed(2));
 
 const {setAsset} = useChartStore();

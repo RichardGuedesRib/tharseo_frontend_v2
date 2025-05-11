@@ -33,8 +33,6 @@ const Trades = () => {
     { label: "Inativas", value: "inativos" },
   ];
 
-  console.log("Tradeflows", tradeflows);
-
   return (
     <div className="w-full bg-bg-principal p-4 flex justify-center items-center flex-col gap-4">
       <MenuTrade />

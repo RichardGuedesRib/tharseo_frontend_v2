@@ -8,8 +8,6 @@ interface ChainAllocationProps {
 
 export function ChainAllocation({ wallets, total }: ChainAllocationProps) {
 
-  console.log("wallets", wallets);
-  console.log("total no comp", total);
   return (
     <div className="flex flex-col items-center">
       {wallets.map((wallet) => (

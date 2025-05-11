@@ -20,7 +20,6 @@ const Dashboard = () => {
   const { setTotalValue, setTotalQuantity, setSymbol } = usePortfolioStore();
 
   const fetchDataUser = async () => {
-    console.log(isLoading);
     setIsLoading(true);
     try {
       const walletsData = await getWalletsUser();
@@ -55,7 +54,6 @@ const Dashboard = () => {
     if(wallets){
       const total = wallets.reduce((acc, wallet) => acc + (wallet.totalValueUSD || 0), 0);
       setTotal(total);
-      console.log("Total", total);
     }
     
   }, [wallets]); 
