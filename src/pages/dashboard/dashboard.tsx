@@ -13,14 +13,12 @@ import usePortfolioStore from "@/store/usePortfolioStore";
 
 const Dashboard = () => {
 
-  const [isLoading, setIsLoading] = useState(false);
   const { wallets, setWallets, updatePriceForAsset } = useWalletStore();
   const [total, setTotal] = useState(0);
 
   const { setTotalValue, setTotalQuantity, setSymbol } = usePortfolioStore();
 
   const fetchDataUser = async () => {
-    setIsLoading(true);
     try {
       const walletsData = await getWalletsUser();
       await getStrategiesUser(); 
@@ -38,7 +36,6 @@ const Dashboard = () => {
       setTotalQuantity(Number(wallets[0].quantity!));
       setSymbol(wallets[0].asset.symbol);
 
-      setIsLoading(false); 
       
       
     } catch (error) {
