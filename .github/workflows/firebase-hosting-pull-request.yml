@@ -10,19 +10,6 @@ permissions:
   pull-requests: write
 
 jobs:
-  notify-start:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify Telegram - Workflow Started
-        run: |
-          COMMIT_LIST=$(git log --pretty=format:"%h - %s" -n 5)
-          
-          MESSAGE="🚀 Novidades! Um deploy de preview do frontend web do Tharseo foi iniciado para o PR #${{ github.event.number }}... A previsão do término é de 3 minutos."
-          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-            -d text="${MESSAGE}" \
-            -d parse_mode="Markdown"
-
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
@@ -44,7 +31,7 @@ jobs:
           projectId: tharseo-c8cb9
       
       - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.10.0
+        uses: zaproxy/action-full-scan@v0.12.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
