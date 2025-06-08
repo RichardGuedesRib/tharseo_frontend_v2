@@ -1,17 +1,57 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tharseo</title>
-    <link rel="stylesheet" href="./src/index.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root" className="bg-bg-principal"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    
-  </body>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 🛡️ META HEADERS DE SEGURANÇA -->
+  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <title>Tharseo</title>
+
+  <!-- 🔗 CSS LOCAL -->
+  <link rel="stylesheet" href="./src/index.css" />
+
+  <!-- 🔐 GOOGLE FONTS COM PROTEÇÃO -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- 🔐 FONT AWESOME COM SRI (SUB RESOURCE INTEGRITY) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <div id="root" className="bg-bg-principal"></div>
+  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- 🛡️ PROTEÇÃO CONTRA CLICKJACKING -->
+  <script>
+    (function () {
+      'use strict';
+      // Impede que o site seja carregado em iframe malicioso
+      if (window.top !== window.self) {
+        window.top.location = window.self.location;
+      }
+
+      // Proteção adicional contra frame busting
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.location = window.location;
+        }
+      } catch (e) {
+        // Bloqueado pelo CSP - isso é bom!
+      }
+    })();
+  </script>
+</body>
+
 </html>
