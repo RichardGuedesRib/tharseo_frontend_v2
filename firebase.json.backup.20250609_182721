@@ -82,28 +82,6 @@
         ]
       }
     ],
-    "redirects": [
-      {
-        "source": "/.git/**",
-        "destination": "/",
-        "type": 301
-      },
-      {
-        "source": "/.svn/**",
-        "destination": "/",
-        "type": 301
-      },
-      {
-        "source": "/.hg/**",
-        "destination": "/",
-        "type": 301
-      },
-      {
-        "source": "/.bzr/**",
-        "destination": "/",
-        "type": 301
-      }
-    ],
     "rewrites": [
       {
         "source": "**",
