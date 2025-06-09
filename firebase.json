@@ -1,10 +1,17 @@
 {
   "hosting": {
     "public": "dist",
+    "site": "tharseocripto",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/.svn/**",
+      "**/.hg/**",
+      "**/.bzr/**",
+      "**/darcs/**",
+      "**/BitKeeper/**"
     ],
     "headers": [
       {
@@ -64,28 +71,15 @@
             "value": "public, max-age=31536000, immutable"
           }
         ]
-      }
-    ],
-    "redirects": [
-      {
-        "source": "/.git/**",
-        "destination": "/404.html",
-        "type": 404
       },
       {
-        "source": "/.svn/**",
-        "destination": "/404.html",
-        "type": 404
-      },
-      {
-        "source": "/.hg/**",
-        "destination": "/404.html",
-        "type": 404
-      },
-      {
-        "source": "/.bzr/**",
-        "destination": "/404.html",
-        "type": 404
+        "source": "**/.*",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
       }
     ],
     "rewrites": [
