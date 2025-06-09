@@ -82,33 +82,6 @@
         ]
       }
     ],
-    "redirects": [
-      {
-        "source": "/.git/**",
-        "destination": "/404.html",
-        "type": 404
-      },
-      {
-        "source": "/.svn/**",
-        "destination": "/404.html",
-        "type": 404
-      },
-      {
-        "source": "/.hg/**",
-        "destination": "/404.html",
-        "type": 404
-      },
-      {
-        "source": "/.bzr/**",
-        "destination": "/404.html",
-        "type": 404
-      },
-      {
-        "source": "/.*",
-        "destination": "/404.html",
-        "type": 404
-      }
-    ],
     "rewrites": [
       {
         "source": "**",
