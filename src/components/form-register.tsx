@@ -70,7 +70,6 @@ export function RegisterForm() {
       password: values.password,
       phone: values.phone,
       levelUser: "user",
-      walletId: null,
       balance: 0,
       isActive: true
     }

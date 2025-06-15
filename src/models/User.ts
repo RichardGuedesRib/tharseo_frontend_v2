@@ -5,7 +5,6 @@ export interface UserRegister{
     password: string,
     phone: string,
     levelUser: string,
-    walletId: number | null,
     balance: number,
     isActive: boolean
 
