@@ -5,7 +5,7 @@ export interface UserRegister{
     password: string,
     phone: string,
     levelUser: string,
-    credentialId: number | null,
+    credential: string | null,
     walletId: number | null,
     balance: number,
     isActive: boolean
