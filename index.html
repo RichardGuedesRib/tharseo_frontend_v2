@@ -34,27 +34,10 @@
 
 <body>
   <div id="root" className="bg-bg-principal"></div>
-  <script type="module" src="/src/main.tsx"></script>
-
   <!-- 🛡️ PROTEÇÃO CONTRA CLICKJACKING -->
-  <script>
-    (function () {
-      'use strict';
-      // Impede que o site seja carregado em iframe malicioso
-      if (window.top !== window.self) {
-        window.top.location = window.self.location;
-      }
-
-      // Proteção adicional contra frame busting
-      try {
-        if (window.parent && window.parent !== window) {
-          window.parent.location = window.location;
-        }
-      } catch (e) {
-        // Bloqueado pelo CSP - isso é bom!
-      }
-    })();
-  </script>
+  <script src="/security.js"></script>
+  
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 
 </html>
