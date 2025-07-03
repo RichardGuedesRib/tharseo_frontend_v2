@@ -43,7 +43,7 @@ const Home = () => {
           </span>
         </Button>
 
-        <span className="text-6xl text-white mt-8">Compre e</span>
+        <span className="text-6xl text-white mt-8">TESTE Compre e</span>
         <span className="text-6xl text-white mt-2"> venda ativos</span>
 
         <span className="text-gray-200 text-center text-sm mt-8 font-light  ">
